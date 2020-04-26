@@ -1,0 +1,33 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+
+proto_library(
+    name = "users_proto",
+    srcs = ["users.proto"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_google_protobuf//:duration_proto",
+        "@com_google_protobuf//:timestamp_proto",
+    ],
+)
+
+go_proto_library(
+    name = "users_go_proto",
+    compilers = ["@io_bazel_rules_go//proto:go_grpc"],
+    importpath = "github.com/johanbrandhorst/bazel-mono/gen/go/myorg/users/v1",
+    proto = ":users_proto",
+    visibility = ["//visibility:public"],
+)
+
+go_library(
+    name = "go_default_library",
+    embed = [":users_go_proto"],
+    importpath = "github.com/johanbrandhorst/bazel-mono/gen/go/myorg/users/v1",
+    visibility = ["//visibility:public"],
+)
+
+typescript_proto_library(
+  name = "users_ts_proto",
+  proto = ":users_proto",
+)
