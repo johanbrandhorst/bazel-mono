@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//extras:bindata.bzl", "bindata")
+
+bindata(
+    name = "bindata",
+    srcs = glob(["*.sql"]),
+    package = "migrations",
+)
+
+go_library(
+    name = "migrations",
+    srcs = [
+        "doc.go",
+        ":bindata",  #keep
+    ],
+    importpath = "github.com/johanbrandhorst/bazel-mono/service/go-server/users/migrations",
+    visibility = ["//visibility:public"],
+)

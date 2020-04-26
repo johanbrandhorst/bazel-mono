@@ -1,0 +1,9 @@
+build:
+  roots:
+    - proto
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT
