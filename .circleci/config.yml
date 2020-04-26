@@ -1,0 +1,144 @@
+version: 2.1
+
+commands:
+  install_bazel:
+    steps:
+      - run:
+          environment:
+            BAZELISK_VERSION: "1.4.0"
+          name: Install Bazelisk as bazel
+          command: |
+            wget -O ~/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64 &&
+            chmod +x ~/bin/bazel
+  configure_bazel:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-bazel-cache-{{ checksum "repositories.bzl" }}
+            - v1-bazel-cache-
+      - run:
+          name: Create Bazel config file (.bazelrc)
+          command: |
+            cat > .bazelrc \<< EOF
+            startup --output_base /tmp/build_output
+            build --test_output errors
+            build --features race
+            # See https://docs.bazel.build/versions/0.23.0/command-line-reference.html
+            build --local_ram_resources=4096 # Container runners have 4G RAM
+            build --local_cpu_resources=2    # Container runners have 2 vCPU
+            EOF
+  save_bazel_cache:
+    steps:
+      - save_cache:
+          key: v1-bazel-cache-{{ checksum "repositories.bzl" }}
+          paths:
+            - /tmp/build_output
+
+jobs:
+  build:
+    docker:
+      - image: l.gcr.io/google/bazel:3.0.0
+    steps:
+      - checkout
+      - configure_bazel
+      - run: bazel build //...
+  test:
+    # Use machine runner for docker socket access
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - install_bazel
+      - configure_bazel
+      - run: bazel test //...
+      - save_bazel_cache
+  gazelle:
+    docker:
+      - image: l.gcr.io/google/bazel:3.0.0
+    steps:
+      - checkout
+      - configure_bazel
+      - run: bazel run :gazelle
+      - run: bazel run :gazelle -- update-repos -from_file=go.mod -to_macro=repositories.bzl%go_repositories
+      - run: git diff --exit-code
+  buildifier:
+    docker:
+      - image: l.gcr.io/google/bazel:3.0.0
+    steps:
+      - checkout
+      - configure_bazel
+      - run: bazel run :buildifier
+      - run: git diff --exit-code
+  format:
+    docker:
+      - image: golang:1.14
+    steps:
+      - checkout
+      - run:
+          name: Install gofumports outside local module
+          command: |
+            cd $(mktemp -d) &&
+            go mod init tmp &&
+            go get mvdan.cc/gofumpt/gofumports@latest
+      - run:
+          name: Run gofumports on all non-generated files
+          command: grep -L -R "^\/\/ Code generated .* DO NOT EDIT\.$$" --exclude-dir=.git --exclude-dir=vendor --include="*.go" . | xargs -n 1 gofumports -w -local github.com/johanbrandhorst/bazel-mono
+      - run:
+          name: Check for any changes
+          command: git diff --exit-code
+  mod:
+    docker:
+      - image: golang:1.14
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-cache
+      - run: go mod tidy
+      - run:
+          name: Check for any changes
+          command: git diff --exit-code
+      - save_cache:
+          key: go-mod-cache
+          paths:
+            # CircleCI users $GOCACHE
+            - /home/circleci/.cache/go-build
+  proto_lint:
+    docker:
+      - image: golang:1.14
+    steps:
+      - checkout
+      - run:
+          name: Install buf outside local module
+          command: |
+            cd $(mktemp -d) &&
+            go mod init tmp &&
+            go get github.com/bufbuild/buf/cmd/buf@latest
+      - run: buf check lint
+  proto_breaking:
+    docker:
+      - image: golang:1.14
+    steps:
+      - checkout
+      - run: git branch -f master origin/master
+      - run:
+          name: Install buf outside local module
+          command: |
+            cd $(mktemp -d) &&
+            go mod init tmp &&
+            go get github.com/bufbuild/buf/cmd/buf@latest
+      - run: buf check breaking --against-input '.git#branch=master'
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+      - gazelle
+      - buildifier
+      - format
+      - mod
+      - proto_lint
+      - proto_breaking:
+          filters:
+            branches:
+              ignore: master
