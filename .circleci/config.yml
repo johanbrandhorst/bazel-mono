@@ -1,0 +1,122 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: l.gcr.io/google/bazel:latest
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - bazel-cache
+      - run: bazel build --output_user_root=/tmp/build_output //...
+      - save_cache:
+          key: bazel-cache
+          paths:
+            - /tmp/build_output
+  format:
+    docker:
+      - image: golang:1.14
+    steps:
+      - checkout
+      - run:
+          name: Install gofumports outside local module
+          command: |
+            cd $(mktemp -d) &&
+            go mod init tmp &&
+            go install mvdan.cc/gofumpt/gofumports@latest
+      - run:
+          name: Run gofumports on all non-generated files
+          command: grep -L -R "^\/\/ Code generated .* DO NOT EDIT\.$$" --exclude-dir=.git --exclude-dir=vendor --include="*.go" . | xargs -n 1 gofumports -w -local github.com/johanbrandhorst/bazel-mono
+      - run:
+          name: Check for any changes
+          command: git diff --exit-code
+  test:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - bazel-cache
+      - run:
+          environment:
+            BAZELISK_VERSION: "1.4.0"
+          name: Install 
+          command: wget -O /usr/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64
+      - run:
+          name: Go test
+          command: bazel test --output_user_root=/tmp/build_output --test_output=errors //...
+      - save_cache:
+          key: bazel-cache
+          paths:
+            - /tmp/build_output
+  mod:
+    docker:
+      - image: golang:1.14
+    steps:
+      - checkout
+      - run: go mod tidy
+      - run:
+          name: Check for any changes
+          command: git diff --exit-code
+  gazelle:
+    docker:
+      - image: l.gcr.io/google/bazel:latest
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - bazel-cache
+      - run: bazel run --output_user_root=/tmp/build_output //:gazelle
+      - run: bazel run --output_user_root=/tmp/build_output //:gazelle -- update-repos -from_file=go.mod -to_macro=repositories.bzl%go_repositories
+      - run: git diff --exit-code
+      - save_cache:
+          key: bazel-cache
+          paths:
+            - /tmp/build_output
+  lint:
+    docker:
+      - image: golangci/golangci-lint:v1.23.8-alpine
+    steps:
+      - checkout
+      - run: golangci-lint run --timeout 5m0s
+  proto_lint:
+    docker:
+      - image: golang:1.14
+    steps:
+      - checkout
+      - run:
+          name: Install buf outside local module
+          command: |
+            cd $(mktemp -d) &&
+            go mod init tmp &&
+            go get github.com/bufbuild/buf/cmd/buf@latest
+      - run: buf check lint
+  proto_breaking:
+    docker:
+      - image: golang:1.14
+    steps:
+      - checkout
+      - run: git branch -f master origin/master
+      - run:
+          name: Install buf outside local module
+          command: |
+            cd $(mktemp -d) &&
+            go mod init tmp &&
+            go get github.com/bufbuild/buf/cmd/buf@latest
+      - run: buf check breaking --against-input '.git#branch=master'
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+      - format
+      - test
+      - mod
+      - gazelle
+      - lint
+      - proto_lint
+      - proto_breaking:
+          filters:
+            branches:
+              ignore: master
