@@ -1,5 +1,6 @@
 workspace(
     name = "bazel_monorepo",
+    managed_directories = {"@npm": ["node_modules"]},
 )
 
 # https://github.com/bazelbuild/rules_go#setup
@@ -34,6 +35,7 @@ load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 
 gazelle_dependencies()
 
+# gazelle update-repos -from_file=go.mod -to_macro=repositories.bzl%go_repositories
 load("//:repositories.bzl", "go_repositories")
 
 go_repositories()
@@ -86,3 +88,58 @@ http_archive(
         "https://github.com/jmhodges/bazel_gomock/archive/v1.2.tar.gz",
     ],
 )
+
+# https://bazelbuild.github.io/rules_nodejs/
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "build_bazel_rules_nodejs",
+    sha256 = "f9e7b9f42ae202cc2d2ce6d698ccb49a9f7f7ea572a78fd451696d03ef2ee116",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/1.6.0/rules_nodejs-1.6.0.tar.gz"],
+)
+
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories")
+
+node_repositories(
+    package_json = ["//:package.json"],
+    node_version = "8.11.1",
+    yarn_version = "1.5.1",
+)
+
+load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
+
+yarn_install(
+    name = "npm",
+    package_json = "//:package.json",
+    yarn_lock = "//:yarn.lock",
+)
+
+# Install all bazel dependencies of our npm packages
+load("@npm//:install_bazel_dependencies.bzl", "install_bazel_dependencies")
+
+install_bazel_dependencies()
+
+# npm install --save-dev @bazel/bazelisk @bazel/ibazel
+# npm install @babel/core @babel/cli @babel/preset-env http-server mocha domino
+
+# https://bazelbuild.github.io/rules_nodejs/TypeScript.html
+# npm install --save-dev @bazel/typescript
+
+# Set up TypeScript toolchain
+load("@npm_bazel_typescript//:index.bzl", "ts_setup_workspace")
+
+ts_setup_workspace()
+
+http_archive(
+    name = "rules_typescript_proto",
+    sha256 = "56dce48f816ae5ad239b0ca5a55e7f774ca6866d3bd2306b26874445bc247eb7",
+    strip_prefix = "rules_typescript_proto-0.0.4",
+    urls = [
+	"https://github.com/Dig-Doug/rules_typescript_proto/archive/0.0.4.tar.gz",
+    ],
+)
+
+load("@rules_typescript_proto//:index.bzl", "rules_typescript_proto_dependencies")
+
+rules_typescript_proto_dependencies()

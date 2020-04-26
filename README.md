@@ -22,3 +22,8 @@ Working:
     $ bazel run //service/go-client:go-client.binary
     $ bazel run //service/go-client:publish
     ```
+
+Not working:
+ - NodeJS gRPC client
+ - Python gRPC client
+ - gRPC-web client

@@ -26,3 +26,8 @@ go_library(
     importpath = "github.com/johanbrandhorst/bazel-mono/gen/go/myorg/users/v1",
     visibility = ["//visibility:public"],
 )
+
+typescript_proto_library(
+  name = "users_ts_proto",
+  proto = ":users_proto",
+)
