@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_embed_data", "go_library")
+
+go_embed_data(
+    name = "embed",
+    package = "migrations",
+    srcs = glob(["*.sql"]),
+    flatten = True,
+    var = "data",
+)
+
+go_library(
+    name = "migrations",
+    srcs = [
+        "migrations.go",
+        ":embed",  #keep
+    ],
+    importpath = "github.com/johanbrandhorst/bazel-mono/service/go-server/users/migrations",
+    visibility = ["//visibility:public"],
+)
