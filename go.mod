@@ -3,7 +3,7 @@ module github.com/johanbrandhorst/bazel-mono
 go 1.14
 
 require (
-	github.com/Masterminds/squirrel v1.2.0
+	github.com/Masterminds/squirrel v1.4.0
 	github.com/fullstorydev/grpcui v0.2.1
 	github.com/fullstorydev/grpcurl v1.5.1 // indirect
 	github.com/golang-migrate/migrate/v4 v4.11.0
