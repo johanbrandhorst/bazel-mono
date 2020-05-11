@@ -33,6 +33,10 @@ commands:
           key: v1-bazel-cache-{{ checksum "repositories.bzl" }}
           paths:
             - /tmp/build_output
+      - save_cache:
+          key: v1-bazel-cache-
+          paths:
+            - /tmp/build_output
 
 jobs:
   build:
