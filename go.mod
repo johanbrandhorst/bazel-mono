@@ -12,7 +12,7 @@ require (
 	github.com/jackc/pgconn v1.5.0
 	github.com/jackc/pgtype v1.3.0
 	github.com/jackc/pgx/v4 v4.6.0
-	github.com/sirupsen/logrus v1.5.0
+	github.com/sirupsen/logrus v1.6.0
 	github.com/soheilhy/cmux v0.1.4
 	github.com/uw-labs/podrick v0.4.1
 	google.golang.org/grpc v1.29.1
