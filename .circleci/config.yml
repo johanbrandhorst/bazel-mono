@@ -30,11 +30,11 @@ commands:
   save_bazel_cache:
     steps:
       - save_cache:
-          key: v1-bazel-cache-{{ checksum "repositories.bzl" }}
+          key: v1-bazel-cache-
           paths:
             - /tmp/build_output
       - save_cache:
-          key: v1-bazel-cache-
+          key: v1-bazel-cache-{{ checksum "repositories.bzl" }}
           paths:
             - /tmp/build_output
 
@@ -137,6 +137,7 @@ workflows:
   build:
     jobs:
       - build
+      - test
       - gazelle
       - buildifier
       - format
