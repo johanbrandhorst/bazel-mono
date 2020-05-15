@@ -54,6 +54,8 @@ jobs:
       - checkout
       - install_bazel
       - configure_bazel
+      # Configure pyenv on the machine
+      - run: echo "3.7.0" > /opt/circleci/.pyenv/version
       - run: bazel test //...
       - save_bazel_cache
   gazelle:
