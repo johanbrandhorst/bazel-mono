@@ -47,7 +47,7 @@ go_test(
         "@com_github_uw_labs_podrick//runtimes/docker:go_default_library",
         "@dev_logur_adapter_logrus//:go_default_library",
         "@org_golang_google_grpc//codes:go_default_library",
-        "@org_golang_google_grpc//metadata:go_default_library",
+        "@org_golang_google_grpc//metadata:go_default_library",  # keep
         "@org_golang_google_grpc//status:go_default_library",
     ],
 )

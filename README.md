@@ -6,6 +6,18 @@ Playing around with using Bazel for CI
 - [Bazelisk](https://github.com/bazelbuild/bazelisk) (install as `bazel`)
 - Docker
 
+## Setup
+
+- Run the tests to run all tests and populate the local bazel cache
+   ```
+   $ bazel test //...
+   ```
+- Run the symlink script to symlink generated files and fix `gopls` errors
+   ```
+   $ ./symlinks.sh
+   ```
+- Symlinks are ignored by git but should be automatically updated if bazel regenerates the source files.
+
 ## Status
 
 Final output should be a docker container pushed to the repo registry.
