@@ -114,29 +114,24 @@ jobs:
             - /home/circleci/.cache/go-build
   proto_lint:
     docker:
-      - image: golang:1.14
+      - image: bufbuild/buf:0.14.0
     steps:
       - checkout
       - run:
-          name: Install buf outside local module
-          command: |
-            cd $(mktemp -d) &&
-            go mod init tmp &&
-            go get github.com/bufbuild/buf/cmd/buf@latest
-      - run: buf check lint
+          name: Check for breaking changes
+          command: buf check lint
   proto_breaking:
     docker:
-      - image: golang:1.14
+      - image: bufbuild/buf:0.14.0
     steps:
       - checkout
-      - run: git branch -f master origin/master
       - run:
-          name: Install buf outside local module
-          command: |
-            cd $(mktemp -d) &&
-            go mod init tmp &&
-            go get github.com/bufbuild/buf/cmd/buf@latest
-      - run: buf check breaking --against-input '.git#branch=master'
+          name: Sync master with remote master unless current branch
+          command: if [[ $(git rev-parse --abbrev-ref HEAD) != "master" ]]; then git branch -f master origin/master; fi
+      - run:
+          name: Check for breaking changes
+          command: buf check breaking --against-input '.git#branch=master'
+ 
 workflows:
   version: 2
   build:
