@@ -16,8 +16,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
+	"github.com/johanbrandhorst/bazel-mono/cmd/go-server/users"
 	pbUsers "github.com/johanbrandhorst/bazel-mono/proto/myorg/users/v1"
-	"github.com/johanbrandhorst/bazel-mono/service/go-server/users"
 )
 
 type pgURL url.URL
