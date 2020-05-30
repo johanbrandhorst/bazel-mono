@@ -1,0 +1,2 @@
+build --workspace_status_command="echo STABLE_GIT_SHA $(git rev-parse HEAD)"
+test --features race
