@@ -31,10 +31,12 @@ commands:
     steps:
       - save_cache:
           key: v1-bazel-cache-
+          when: always
           paths:
             - /tmp/build_output
       - save_cache:
           key: v1-bazel-cache-{{ checksum "repositories.bzl" }}
+          when: always
           paths:
             - /tmp/build_output
 
@@ -46,6 +48,7 @@ jobs:
       - checkout
       - configure_bazel
       - run: bazel build //...
+      - save_bazel_cache
   test:
     # Use machine runner for docker socket access
     machine:
