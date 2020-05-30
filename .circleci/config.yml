@@ -14,15 +14,14 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - v1-bazel-cache-{{ checksum "repositories.bzl" }}
-            - v1-bazel-cache-
+            - v2-bazel-cache-{{ checksum "repositories.bzl" }}
+            - v2-bazel-cache-
       - run:
           name: Create Bazel config file (.bazelrc)
           command: |
-            cat > .bazelrc \<< EOF
+            cat >> .bazelrc \<< EOF
             startup --output_base /tmp/build_output
             build --test_output errors
-            build --features race
             # See https://docs.bazel.build/versions/0.23.0/command-line-reference.html
             build --local_ram_resources=4096 # Container runners have 4G RAM
             build --local_cpu_resources=2    # Container runners have 2 vCPU
@@ -30,12 +29,12 @@ commands:
   save_bazel_cache:
     steps:
       - save_cache:
-          key: v1-bazel-cache-
+          key: v2-bazel-cache-
           when: always
           paths:
             - /tmp/build_output
       - save_cache:
-          key: v1-bazel-cache-{{ checksum "repositories.bzl" }}
+          key: v2-bazel-cache-{{ checksum "repositories.bzl" }}
           when: always
           paths:
             - /tmp/build_output
@@ -60,7 +59,6 @@ jobs:
       # Configure pyenv on the machine
       - run: echo "3.7.0" > /opt/circleci/.pyenv/version
       - run: bazel test //...
-      - save_bazel_cache
   gazelle:
     docker:
       - image: l.gcr.io/google/bazel:3.2.0
@@ -69,7 +67,7 @@ jobs:
       - configure_bazel
       - run: bazel run :gazelle
       - run: bazel run :gazelle -- update-repos -from_file=go.mod -to_macro=repositories.bzl%go_repositories
-      - run: git diff --exit-code
+      - run: git diff --exit-code -- . ':(exclude).bazelrc'
   buildifier:
     docker:
       - image: l.gcr.io/google/bazel:3.2.0
@@ -77,7 +75,7 @@ jobs:
       - checkout
       - configure_bazel
       - run: bazel run :buildifier
-      - run: git diff --exit-code
+      - run: git diff --exit-code -- . ':(exclude).bazelrc'
   format:
     docker:
       - image: golang:1.14
@@ -131,11 +129,26 @@ jobs:
       - run:
           name: Check for breaking changes
           command: buf check breaking --against-input '.git#branch=master'
- 
+  release:
+    docker:
+      - image: l.gcr.io/google/bazel:3.2.0
+    steps:
+      - checkout
+      - configure_bazel
+      - setup_remote_docker
+      - run: echo "${GITHUB_REGISTRY_TOKEN}" | docker login https://docker.pkg.github.com -u johanbrandhorst --password-stdin
+      - run:
+          name: Publish all containers with bazel
+          command: |
+            bazel query --keep_going --noshow_progress "kind(container_push, //...)" | \
+            xargs -n 1 bazel run
+      - save_bazel_cache
+
 workflows:
   version: 2
   build:
     jobs:
+      - release
       - build
       - test
       - gazelle

@@ -1,6 +1,5 @@
 node_modules
 bazel-*
-.bazelrc
 
 # Ignore symlinked generated files
 **/*.pb.go
