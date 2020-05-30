@@ -8,11 +8,11 @@ go_library(
         "types.go",
         "users.go",
     ],
-    importpath = "github.com/johanbrandhorst/bazel-mono/service/go-server/users",
+    importpath = "github.com/johanbrandhorst/bazel-mono/cmd/go-server/users",
     visibility = ["//visibility:public"],
     deps = [
+        "//cmd/go-server/users/migrations",
         "//proto/myorg/users/v1:go_default_library",
-        "//service/go-server/users/migrations",
         "@com_github_golang_migrate_migrate_v4//:go_default_library",
         "@com_github_golang_migrate_migrate_v4//database/postgres:go_default_library",
         "@com_github_golang_migrate_migrate_v4//source/go_bindata:go_default_library",

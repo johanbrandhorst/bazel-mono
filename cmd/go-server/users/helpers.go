@@ -11,8 +11,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"github.com/johanbrandhorst/bazel-mono/cmd/go-server/users/migrations"
 	pbUsers "github.com/johanbrandhorst/bazel-mono/proto/myorg/users/v1"
-	"github.com/johanbrandhorst/bazel-mono/service/go-server/users/migrations"
 )
 
 // version defines the current migration version. This ensures the app

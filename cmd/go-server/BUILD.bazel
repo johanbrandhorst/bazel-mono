@@ -7,17 +7,21 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["main.go"],
-    importpath = "github.com/johanbrandhorst/bazel-mono/service/go-client",
+    importpath = "github.com/johanbrandhorst/bazel-mono/cmd/go-server",
     visibility = ["//visibility:private"],
     deps = [
+        "//cmd/go-server/users:go_default_library",
         "//proto/myorg/users/v1:go_default_library",
+        "@com_github_fullstorydev_grpcui//standalone:go_default_library",
         "@com_github_sirupsen_logrus//:go_default_library",
+        "@com_github_soheilhy_cmux//:go_default_library",
         "@org_golang_google_grpc//:go_default_library",
+        "@org_golang_google_grpc//reflection:go_default_library",
     ],
 )
 
 go_image(
-    name = "go-client",
+    name = "go-server",
     embed = [":go_default_library"],
     pure = "on",
     static = "on",
@@ -27,8 +31,8 @@ go_image(
 container_push(
     name = "publish",
     format = "Docker",
-    image = "go-client",
+    image = "go-server",
     registry = "docker.pkg.github.com",
-    repository = "johanbrandhorst/bazel-mono/go-client",
+    repository = "johanbrandhorst/bazel-mono/go-server",
     tag = "{STABLE_GIT_SHA}",
 )
