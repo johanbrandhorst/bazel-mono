@@ -10,12 +10,52 @@ commands:
           command: |
             wget -O ~/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64 &&
             chmod +x ~/bin/bazel
-  configure_bazel:
+  generate_files_sum:
     steps:
+      - run: 
+          name: Generate checksum file
+          command: sha256sum $(git ls-files) > files.sum
+  restore_bazel_test_cache:
+    steps:
+      - generate_files_sum
       - restore_cache:
           keys:
-            - v2-bazel-cache-{{ checksum "repositories.bzl" }}
-            - v2-bazel-cache-
+            - v1-bazel-test-cache-{{ checksum "files.sum" }}
+            - v1-bazel-test-cache-
+  restore_bazel_build_cache:
+    steps:
+      - generate_files_sum
+      - restore_cache:
+          keys:
+            - v1-bazel-build-cache-{{ checksum "files.sum" }}
+            - v1-bazel-build-cache-
+  restore_bazel_release_cache:
+    steps:
+      - generate_files_sum
+      - restore_cache:
+          keys:
+            - v1-bazel-release-cache-{{ checksum "files.sum" }}
+            - v1-bazel-release-cache-
+  save_bazel_test_cache:
+    steps:
+      - save_cache:
+          key: v1-bazel-test-cache-{{ checksum "files.sum" }}
+          paths:
+            - /tmp/build_output
+  save_bazel_build_cache:
+    steps:
+      - save_cache:
+          key: v1-bazel-build-cache-{{ checksum "files.sum" }}
+          paths:
+            - /tmp/build_output
+  save_bazel_release_cache:
+    steps:
+      - save_cache:
+          key: v1-bazel-release-cache-{{ checksum "files.sum" }}
+          paths:
+            - /tmp/build_output
+  configure_bazel:
+    steps:
       - run:
           name: Create Bazel config file (.bazelrc)
           command: |
@@ -26,18 +66,6 @@ commands:
             build --local_ram_resources=4096 # Container runners have 4G RAM
             build --local_cpu_resources=2    # Container runners have 2 vCPU
             EOF
-  save_bazel_cache:
-    steps:
-      - save_cache:
-          key: v2-bazel-cache-
-          when: always
-          paths:
-            - /tmp/build_output
-      - save_cache:
-          key: v2-bazel-cache-{{ checksum "repositories.bzl" }}
-          when: always
-          paths:
-            - /tmp/build_output
 
 jobs:
   build:
@@ -46,8 +74,9 @@ jobs:
     steps:
       - checkout
       - configure_bazel
+      - restore_bazel_build_cache
       - run: bazel build //...
-      - save_bazel_cache
+      - save_bazel_build_cache
   test:
     # Use machine runner for docker socket access
     machine:
@@ -56,15 +85,18 @@ jobs:
       - checkout
       - install_bazel
       - configure_bazel
+      - restore_bazel_test_cache
       # Configure pyenv on the machine
       - run: echo "3.7.0" > /opt/circleci/.pyenv/version
       - run: bazel test //...
+      - save_bazel_test_cache
   gazelle:
     docker:
       - image: l.gcr.io/google/bazel:3.2.0
     steps:
       - checkout
       - configure_bazel
+      - restore_bazel_build_cache
       - run: bazel run :gazelle
       - run: bazel run :gazelle -- update-repos -from_file=go.mod -to_macro=repositories.bzl%go_repositories
       - run: git diff --exit-code -- . ':(exclude).bazelrc'
@@ -74,6 +106,7 @@ jobs:
     steps:
       - checkout
       - configure_bazel
+      - restore_bazel_build_cache
       - run: bazel run :buildifier
       - run: git diff --exit-code -- . ':(exclude).bazelrc'
   format:
@@ -135,14 +168,14 @@ jobs:
     steps:
       - checkout
       - configure_bazel
-      - setup_remote_docker
+      - restore_bazel_release_cache
       - run: echo "${GITHUB_REGISTRY_TOKEN}" | docker login https://docker.pkg.github.com -u johanbrandhorst --password-stdin
       - run:
           name: Publish all containers with bazel
           command: |
             bazel query --keep_going --noshow_progress "kind(container_push, //...)" | \
             xargs -n 1 bazel run
-      - save_bazel_cache
+      - save_bazel_release_cache
 
 workflows:
   version: 2
