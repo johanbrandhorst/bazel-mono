@@ -145,7 +145,7 @@ jobs:
             - /home/circleci/.cache/go-build
   proto_lint:
     docker:
-      - image: bufbuild/buf:0.14.0
+      - image: bufbuild/buf:0.15.0
     steps:
       - checkout
       - run:
@@ -153,7 +153,7 @@ jobs:
           command: buf check lint
   proto_breaking:
     docker:
-      - image: bufbuild/buf:0.14.0
+      - image: bufbuild/buf:0.15.0
     steps:
       - checkout
       - run:
