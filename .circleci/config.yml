@@ -1,15 +1,6 @@
 version: 2.1
 
 commands:
-  install_bazel:
-    steps:
-      - run:
-          environment:
-            BAZELISK_VERSION: "1.4.0"
-          name: Install Bazelisk as bazel
-          command: |
-            wget -O ~/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64 &&
-            chmod +x ~/bin/bazel
   generate_files_sum:
     steps:
       - run: 
@@ -83,7 +74,13 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - install_bazel
+      - run:
+          environment:
+            BAZELISK_VERSION: "1.4.0"
+          name: Install Bazelisk as bazel
+          command: |
+            wget -O ~/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64 &&
+            chmod +x ~/bin/bazel
       - configure_bazel
       - restore_bazel_test_cache
       # Configure pyenv on the machine
@@ -141,8 +138,46 @@ jobs:
       - save_cache:
           key: go-mod-cache
           paths:
-            # CircleCI users $GOCACHE
             - /home/circleci/.cache/go-build
+  lint:
+    docker:
+      - image: golang:1.14
+    steps:
+      - checkout
+      - run:
+          environment:
+            BAZELISK_VERSION: "1.4.0"
+          name: Install Bazelisk as bazel
+          command: |
+            wget -O /usr/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64 &&
+            chmod +x /usr/bin/bazel
+      - configure_bazel
+      - restore_bazel_build_cache
+      - restore_cache:
+          keys:
+            - v1-staticcheck-cache-{{ checksum "go.sum" }}
+            - v1-staticcheck-cache-
+      - run:
+          name: Install staticcheck outside local module
+          command: |
+            cd $(mktemp -d) &&
+            go mod init tmp &&
+            go get honnef.co/go/tools/cmd/staticcheck
+      - run:
+          name: Install python3 for bazel
+          command: apt-get update && apt-get install -y python3
+      - run:
+          name: Run bazel build to create files for symlinking
+          command: bazel build //...
+      - run:
+          name: Run symlinks script to create symlinks
+          command: ./symlinks.sh
+      - run: staticcheck ./...
+      - save_cache:
+          key: v1-staticcheck-cache-{{ checksum "go.sum" }}
+          paths:
+            - /home/circleci/.cache/go-build
+            - /home/circleci/.cache/staticcheck
   proto_lint:
     docker:
       - image: bufbuild/buf:0.15.0
@@ -188,6 +223,7 @@ workflows:
       - buildifier
       - format
       - mod
+      - lint
       - proto_lint
       - proto_breaking:
           filters:
