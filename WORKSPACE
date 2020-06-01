@@ -4,7 +4,6 @@ workspace(
 
 # https://github.com/bazelbuild/rules_go#setup
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 http_archive(
     name = "io_bazel_rules_go",
@@ -88,17 +87,6 @@ http_archive(
         "https://github.com/jmhodges/bazel_gomock/archive/v1.2.tar.gz",
     ],
 )
-
-git_repository(
-    name = "com_github_atlassian_bazel_tools",
-    commit = "936325de16966d259eee3f309f8578b761cfc874",
-    remote = "https://github.com/atlassian/bazel-tools.git",
-    shallow_since = "1586491416 +1000",
-)
-
-load("@com_github_atlassian_bazel_tools//golangcilint:deps.bzl", "golangcilint_dependencies")
-
-golangcilint_dependencies()
 
 load("@com_github_bazelbuild_buildtools//buildifier:deps.bzl", "buildifier_dependencies")
 
