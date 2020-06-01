@@ -15,7 +15,7 @@ for label in $(bazel query 'kind(go_proto_library, //...)'); do
 	[[ -d "${package}" ]] || continue
 
 	# compute the path where bazel put the files
-	out_path="bazel-bin/${package}/${OS}_${ARCH}_stripped/${target}%/github.com/johanbrandhorst/bazel-mono/${package}"
+	out_path="bazel-bin/${package}/users_go_proto_/github.com/johanbrandhorst/bazel-mono/${package}"
 
 	# compute the relative_path to the
 	count_paths="$(echo -n "${package}" | tr '/' '\n' | wc -l)"
