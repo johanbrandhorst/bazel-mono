@@ -49,12 +49,18 @@ func main() {
 	addResp, err := users.AddUser(ctx, &pbUsers.AddUserRequest{
 		Role: pbUsers.Role_ROLE_ADMIN,
 	})
+	if err != nil {
+		log.WithError(err).Panic("Failed to add user")
+	}
 
 	log.Info("Added: ", addResp.GetUser())
 
 	log.Info("Listing users")
 
 	srv, err := users.ListUsers(ctx, new(pbUsers.ListUsersRequest))
+	if err != nil {
+		log.WithError(err).Panic("Failed to list users")
+	}
 
 	for {
 		listResp, err := srv.Recv()
@@ -73,6 +79,9 @@ func main() {
 	delResp, err := users.DeleteUser(ctx, &pbUsers.DeleteUserRequest{
 		Id: addResp.GetUser().GetId(),
 	})
+	if err != nil {
+		log.WithError(err).Panic("Failed to delete user")
+	}
 
 	log.Infoln("Deleted: ", delResp.GetUser())
 
