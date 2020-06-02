@@ -1,0 +1,11 @@
+syntax="proto3";
+
+package myorg.blogs.v1;
+
+option go_package = "github.com/johanbrandhorst/bazel-mono/proto/myorg/blogs/v1;blogs";
+
+import "myorg/users/v1/users.proto";
+
+message Blog {
+    myorg.users.v1.User author = 1;
+}

@@ -3,6 +3,7 @@ load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
 
 # gazelle:build_file_name BUILD,BUILD.bazel
 # gazelle:prefix github.com/johanbrandhorst/bazel-mono
+# gazelle:proto_import_prefix github.com/johanbrandhorst/bazel-mono/proto
 gazelle(
     name = "gazelle",
 )

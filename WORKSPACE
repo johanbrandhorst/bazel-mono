@@ -21,6 +21,16 @@ go_rules_dependencies()
 
 go_register_toolchains()
 
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+git_repository(
+    name = "bazel_gazelle",
+    remote = "https://github.com/jayconrod/bazel-gazelle",
+    commit = "19cad5c9ca619ec55a117690788d7a6c74b04c9c",
+    shallow_since = "1591202608 -0400",
+)
+
+
+'''
 http_archive(
     name = "bazel_gazelle",
     sha256 = "cdb02a887a7187ea4d5a27452311a75ed8637379a1287d8eeb952138ea485f7d",
@@ -29,6 +39,7 @@ http_archive(
         "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.21.1/bazel-gazelle-v0.21.1.tar.gz",
     ],
 )
+'''
 
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 
