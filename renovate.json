@@ -1,5 +1,26 @@
 {
   "extends": [
     "config:base"
+  ],
+  "postUpdateOptions": [
+    "gomodTidy"
+  ],
+  "packageRules": [
+    {
+      "updateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "automerge": true
+    },
+    {
+      "packageNames": [
+        "github.com/golang/protobuf",
+        "google.golang.org/protobuf"
+      ],
+      "groupName": "golang/protobuf"
+    }
   ]
 }
