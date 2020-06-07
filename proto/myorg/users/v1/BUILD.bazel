@@ -5,6 +5,7 @@ load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 proto_library(
     name = "users_proto",
     srcs = ["users.proto"],
+    strip_import_prefix = "/proto",
     visibility = ["//visibility:public"],
     deps = [
         "@com_google_protobuf//:duration_proto",
