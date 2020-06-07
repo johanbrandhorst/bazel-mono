@@ -48,9 +48,9 @@ commands:
   configure_bazel:
     steps:
       - run:
-          name: Create Bazel config file (.bazelrc)
+          name: Create Bazel config file
           command: |
-            cat >> .bazelrc \<< EOF
+            cat > ~/.bazelrc \<< EOF
             startup --output_base /tmp/build_output
             build --test_output errors
             # See https://docs.bazel.build/versions/0.23.0/command-line-reference.html
@@ -96,7 +96,7 @@ jobs:
       - restore_bazel_build_cache
       - run: bazel run :gazelle
       - run: bazel run :gazelle -- update-repos -from_file=go.mod -to_macro=repositories.bzl%go_repositories
-      - run: git diff --exit-code -- . ':(exclude).bazelrc'
+      - run: git diff --exit-code
   buildifier:
     docker:
       - image: l.gcr.io/google/bazel:3.2.0
@@ -105,7 +105,7 @@ jobs:
       - configure_bazel
       - restore_bazel_build_cache
       - run: bazel run :buildifier
-      - run: git diff --exit-code -- . ':(exclude).bazelrc'
+      - run: git diff --exit-code
   format:
     docker:
       - image: golang:1.14
