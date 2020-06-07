@@ -204,13 +204,35 @@ jobs:
       - checkout
       - configure_bazel
       - restore_bazel_release_cache
-      - run: echo "${GITHUB_REGISTRY_TOKEN}" | docker login https://docker.pkg.github.com -u johanbrandhorst --password-stdin
+      - run: echo "${GITHUB_TOKEN}" | docker login https://docker.pkg.github.com -u johanbrandhorst --password-stdin
       - run:
           name: Publish all containers with bazel
           command: |
             bazel query --keep_going --noshow_progress "kind(container_push, //...)" | \
             xargs -n 1 bazel run
       - save_bazel_release_cache
+  update-repositoriesbzl:
+    docker:
+      - image: l.gcr.io/google/bazel:3.2.0
+    steps:
+      - checkout
+      - configure_bazel
+      - restore_bazel_build_cache
+      - run:
+          name: Update repositories.bzl
+          command: |
+            bazel run //:gazelle -- update-repos -from_file=go.mod -to_macro=repositories.bzl%go_repositories
+      - run:
+          name: Git amend and push changes
+          command: |
+            git add .
+            if output=$(git status --porcelain) && [ ! -z "$output" ]; then
+              git config user.name "Renovate Bot"
+              git config user.email "bot@renovateapp.com"
+              git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/johanbrandhorst/bazel-mono.git
+              git commit --amend --no-edit
+              git push --force-with-lease origin ${CIRCLE_BRANCH}
+            fi
 
 workflows:
   version: 2
@@ -229,3 +251,9 @@ workflows:
           filters:
             branches:
               ignore: master
+      - update-repositoriesbzl:
+          filters:
+            branches:
+              only: /renovate\/.+/
+            tags:
+              ignore: /.*/
