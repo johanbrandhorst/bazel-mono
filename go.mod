@@ -9,7 +9,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.11.0
 	github.com/golang/mock v1.4.3
 	github.com/golang/protobuf v1.4.2
-	github.com/jackc/pgconn v1.5.0
+	github.com/jackc/pgconn v1.6.0
 	github.com/jackc/pgtype v1.3.0
 	github.com/jackc/pgx/v4 v4.6.0
 	github.com/sirupsen/logrus v1.6.0
