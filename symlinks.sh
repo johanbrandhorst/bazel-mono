@@ -2,9 +2,6 @@
 
 set -euo pipefail
 
-OS="$(go env GOHOSTOS)"
-ARCH="$(go env GOARCH)"
-
 echo -e ">>> Symlinking Go proto files"
 for label in $(bazel query 'kind(go_proto_library, //...)'); do
 	package="${label%%:*}"
@@ -15,7 +12,7 @@ for label in $(bazel query 'kind(go_proto_library, //...)'); do
 	[[ -d "${package}" ]] || continue
 
 	# compute the path where bazel put the files
-	out_path="bazel-bin/${package}/users_go_proto_/github.com/johanbrandhorst/bazel-mono/${package}"
+	out_path="bazel-bin/${package}/${target}_/github.com/johanbrandhorst/bazel-mono/${package}"
 
 	# compute the relative_path to the
 	count_paths="$(echo -n "${package}" | tr '/' '\n' | wc -l)"
