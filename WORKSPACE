@@ -2,7 +2,6 @@ workspace(
     name = "bazel_monorepo",
 )
 
-# https://github.com/bazelbuild/rules_go#setup
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
@@ -14,7 +13,6 @@ http_archive(
     ],
 )
 
-# https://github.com/bazelbuild/rules_go/blob/master/go/deps.bzl
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 
 go_rules_dependencies()
@@ -43,7 +41,6 @@ load("@io_bazel_rules_go//extras:embed_data_deps.bzl", "go_embed_data_dependenci
 
 go_embed_data_dependencies()
 
-# Download the rules_docker repository at release v0.14.1
 http_archive(
     name = "io_bazel_rules_docker",
     sha256 = "6287241e033d247e9da5ff705dd6ef526bac39ae82f3d17de1b69f8cb313f9cd",
@@ -78,7 +75,6 @@ rules_proto_dependencies()
 
 rules_proto_toolchains()
 
-# https://github.com/jmhodges/bazel_gomock
 http_archive(
     name = "bazel_gomock",
     sha256 = "4baf3389ca48c30d8b072a027923c91c45915ab8061e39e7a0c62706332e096e",
