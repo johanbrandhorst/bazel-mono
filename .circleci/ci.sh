@@ -46,7 +46,7 @@ function build_binaries() {
     mapfile -t binaries < <( bazel query --keep_going --noshow_progress "kind(.*_binary, rdeps(//..., set(${packages[*]})))" )
     if [[ ${#binaries[@]} != 0 ]]; then
         echo "Building binaries: ${binaries[*]}"
-        bazel test "${binaries[@]}"
+        bazel build "${binaries[@]}"
     fi
 }
 
