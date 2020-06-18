@@ -16,5 +16,6 @@ require (
 	github.com/soheilhy/cmux v0.1.4
 	github.com/uw-labs/podrick v0.4.1
 	google.golang.org/grpc v1.29.1
+	google.golang.org/protobuf v1.23.0
 	logur.dev/adapter/logrus v0.5.0
 )
