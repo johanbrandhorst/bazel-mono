@@ -10,7 +10,7 @@ require (
 	github.com/golang/protobuf v1.4.2
 	github.com/jackc/pgconn v1.6.1
 	github.com/jackc/pgtype v1.4.0
-	github.com/jackc/pgx/v4 v4.6.1-0.20200606145419-4e5062306904
+	github.com/jackc/pgx/v4 v4.7.0
 	github.com/sirupsen/logrus v1.6.0
 	github.com/soheilhy/cmux v0.1.4
 	github.com/uw-labs/podrick v0.4.1
