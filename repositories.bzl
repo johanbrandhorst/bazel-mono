@@ -473,8 +473,8 @@ def go_repositories():
     go_repository(
         name = "com_github_jackc_pgconn",
         importpath = "github.com/jackc/pgconn",
-        sum = "h1:8FiBxMxS/Z0eQ9BeE1HhL6pzPL1R5x+ZuQ+T86WgZ4I=",
-        version = "v1.6.0",
+        sum = "h1:lwofaXKPbIx6qEaK8mNm7uZuOwxHw+PnAFGDsDFpkRI=",
+        version = "v1.6.1",
     )
     go_repository(
         name = "com_github_jackc_pgio",
@@ -1073,8 +1073,8 @@ def go_repositories():
     go_repository(
         name = "org_golang_x_crypto",
         importpath = "golang.org/x/crypto",
-        sum = "h1:3zb4D3T4G8jdExgVU/95+vQXfpEPiMdCaZgmGVxjNHM=",
-        version = "v0.0.0-20200323165209-0ec3e9974c59",
+        sum = "h1:psW17arqaxU48Z5kZ0CQnkZWQJsqcURM6tKiBApRjXI=",
+        version = "v0.0.0-20200622213623-75b288015ac9",
     )
     go_repository(
         name = "org_golang_x_exp",
@@ -1133,8 +1133,8 @@ def go_repositories():
     go_repository(
         name = "org_golang_x_text",
         importpath = "golang.org/x/text",
-        sum = "h1:tW2bmiBqwgJj/UpqtC8EpXEZVYOwU0yG4iWbprSVAcs=",
-        version = "v0.3.2",
+        sum = "h1:cokOdA+Jmi5PJGXLlLllQSgYigAEfHXJAERHVMaCc2k=",
+        version = "v0.3.3",
     )
     go_repository(
         name = "org_golang_x_time",
