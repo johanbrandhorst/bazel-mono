@@ -23,27 +23,18 @@ import (
 	pbUsers "github.com/johanbrandhorst/bazel-mono/proto/myorg/users/v1"
 )
 
-var (
-	log *logrus.Logger
-
-	pgURL *url.URL
-)
-
-func TestMain(m *testing.M) {
-	code := 0
-	defer func() {
-		os.Exit(code)
-	}()
-	ctx, cancel := signalCtx()
-	defer cancel()
-
-	log = logrus.New()
-	log.Formatter = &logrus.TextFormatter{
+var log = &logrus.Logger{
+	Formatter: &logrus.TextFormatter{
 		TimestampFormat: time.StampMilli,
 		FullTimestamp:   true,
 		ForceColors:     true,
-	}
+	},
+}
 
+func StartPostgresContainer(tb testing.TB) *url.URL {
+	tb.Helper()
+
+	ctx, _ := signalCtx()
 	ctr, err := podrick.StartContainer(ctx, "postgres", "12-alpine", "5432",
 		podrick.WithEnv([]string{
 			"POSTGRES_HOST_AUTH_METHOD=trust", // https://github.com/docker-library/postgres/issues/681
@@ -63,27 +54,27 @@ func TestMain(m *testing.M) {
 		podrick.WithLogger(logrusadapter.New(log)),
 	)
 	if err != nil {
-		log.Println("Failed to start database container", err)
-		return
+		tb.Fatal("Failed to start database container:", err)
+		return nil
 	}
-	defer func() {
+	tb.Cleanup(func() {
 		err = ctr.Close(context.Background())
 		if err != nil {
-			log.Println("Failed to stop database container", err)
-			return
+			tb.Fatal("Failed to stop database container:", err)
 		}
-	}()
+	})
 
-	pgURL, err = url.Parse("postgresql://postgres@" + ctr.Address() + "/postgres?sslmode=disable")
+	pgURL, err := url.Parse("postgresql://postgres@" + ctr.Address() + "/postgres?sslmode=disable")
 	if err != nil {
-		log.Println("Failed to parse container address", err)
-		return
+		tb.Fatal("Failed to parse container address:", err)
+		return nil
 	}
 
-	code = m.Run()
+	return pgURL
 }
 
 func TestAddDeleteUser(t *testing.T) {
+	pgURL := StartPostgresContainer(t)
 	d, err := users.NewDirectory(log, pgURL)
 	if err != nil {
 		t.Fatalf("Failed to create a new directory: %s", err)
@@ -157,6 +148,7 @@ func TestAddDeleteUser(t *testing.T) {
 }
 
 func TestListUsers(t *testing.T) {
+	pgURL := StartPostgresContainer(t)
 	d, err := users.NewDirectory(log, pgURL)
 	if err != nil {
 		t.Fatalf("Failed to create a new directory: %s", err)
