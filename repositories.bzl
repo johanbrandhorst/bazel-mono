@@ -515,8 +515,8 @@ def go_repositories():
     go_repository(
         name = "com_github_jackc_pgtype",
         importpath = "github.com/jackc/pgtype",
-        sum = "h1:pHQfb4jh9iKqHyxPthq1fr+0HwSNIl3btYPbw2m2lbM=",
-        version = "v1.4.0",
+        sum = "h1:8PRKqCS9Nt2FQbNegoEAIlY6r/DTP2aaXyh5bAEn89g=",
+        version = "v1.4.1",
     )
     go_repository(
         name = "com_github_jackc_pgx",
