@@ -473,8 +473,8 @@ def go_repositories():
     go_repository(
         name = "com_github_jackc_pgconn",
         importpath = "github.com/jackc/pgconn",
-        sum = "h1:lwofaXKPbIx6qEaK8mNm7uZuOwxHw+PnAFGDsDFpkRI=",
-        version = "v1.6.1",
+        sum = "h1:ifRs/oHByR6NfEXfusvjoTqX/KcSvDYNFASoK/wXKfs=",
+        version = "v1.6.2",
     )
     go_repository(
         name = "com_github_jackc_pgio",
@@ -509,8 +509,8 @@ def go_repositories():
     go_repository(
         name = "com_github_jackc_pgservicefile",
         importpath = "github.com/jackc/pgservicefile",
-        sum = "h1:Q3tB+ExeflWUW7AFcAhXqk40s9mnNYLk1nOkKNZ5GnU=",
-        version = "v0.0.0-20200307190119-3430c5407db8",
+        sum = "h1:C8S2+VttkHFdOOCXJe+YGfa4vHYwlt4Zx+IVXQ97jYg=",
+        version = "v0.0.0-20200714003250-2b9c44734f2b",
     )
     go_repository(
         name = "com_github_jackc_pgtype",
