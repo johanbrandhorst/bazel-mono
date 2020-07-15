@@ -3,6 +3,5 @@ bazel-*
 files.sum
 
 # Ignore symlinked generated files
-**/*.pb.go
 **/bindata.go
 **/mocks_test.go

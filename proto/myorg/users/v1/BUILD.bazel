@@ -1,6 +1,7 @@
 load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+load("//bazel/go:proto.bzl", "go_proto_link")
 
 proto_library(
     name = "users_proto",
@@ -27,4 +28,10 @@ go_library(
     embed = [":users_go_proto"],
     importpath = "github.com/johanbrandhorst/bazel-mono/proto/myorg/users/v1",
     visibility = ["//visibility:public"],
+)
+
+go_proto_link(
+    name = "users_go_proto_link",
+    dep = ":users_go_proto",
+    version = "v1",
 )

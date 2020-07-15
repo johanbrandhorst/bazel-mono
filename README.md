@@ -17,6 +17,10 @@ Playing around with using Bazel for CI
    $ ./symlinks.sh
    ```
 - Symlinks are ignored by git but should be automatically updated if bazel regenerates the source files.
+- Run the go proto link bazel script to copy generated protofiles
+   ```
+   $ bazel query 'kind("proto_link", //...)'  | xargs bazel run
+   ```
 
 ## Status
 
