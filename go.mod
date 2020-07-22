@@ -9,7 +9,7 @@ require (
 	github.com/golang/mock v1.4.3
 	github.com/golang/protobuf v1.4.2
 	github.com/jackc/pgconn v1.6.3
-	github.com/jackc/pgtype v1.4.1
+	github.com/jackc/pgtype v1.4.2
 	github.com/jackc/pgx/v4 v4.7.2
 	github.com/sirupsen/logrus v1.6.0
 	github.com/soheilhy/cmux v0.1.4
