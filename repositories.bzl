@@ -341,8 +341,8 @@ def go_repositories():
     go_repository(
         name = "com_github_golang_mock",
         importpath = "github.com/golang/mock",
-        sum = "h1:GV+pQPG/EUUbkh47niozDcADz6go/dUwhVzdUQHIVRw=",
-        version = "v1.4.3",
+        sum = "h1:l75CXGRSwbaYNpl/Z2X1XIIAMSCquvXgpVZDhwEIJsc=",
+        version = "v1.4.4",
     )
     go_repository(
         name = "com_github_golang_protobuf",
