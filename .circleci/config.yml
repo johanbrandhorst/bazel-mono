@@ -108,7 +108,7 @@ jobs:
       - run: git diff --exit-code
   format:
     docker:
-      - image: golang:1.14
+      - image: golang:1.15
     steps:
       - checkout
       - run:
@@ -125,7 +125,7 @@ jobs:
           command: git diff --exit-code
   mod:
     docker:
-      - image: golang:1.14
+      - image: golang:1.15
     steps:
       - checkout
       - restore_cache:
@@ -141,7 +141,7 @@ jobs:
             - /home/circleci/.cache/go-build
   lint:
     docker:
-      - image: golang:1.14
+      - image: golang:1.15
     steps:
       - checkout
       - run:
