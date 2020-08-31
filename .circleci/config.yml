@@ -61,7 +61,7 @@ commands:
 jobs:
   build:
     docker:
-      - image: l.gcr.io/google/bazel:3.3.1
+      - image: l.gcr.io/google/bazel:3.4.1
     steps:
       - checkout
       - configure_bazel
@@ -89,7 +89,7 @@ jobs:
       - save_bazel_test_cache
   gazelle:
     docker:
-      - image: l.gcr.io/google/bazel:3.3.1
+      - image: l.gcr.io/google/bazel:3.4.1
     steps:
       - checkout
       - configure_bazel
@@ -99,7 +99,7 @@ jobs:
       - run: git diff --exit-code
   buildifier:
     docker:
-      - image: l.gcr.io/google/bazel:3.3.1
+      - image: l.gcr.io/google/bazel:3.4.1
     steps:
       - checkout
       - configure_bazel
@@ -199,7 +199,7 @@ jobs:
           command: buf check breaking --against-input '.git#branch=master'
   release:
     docker:
-      - image: l.gcr.io/google/bazel:3.3.1
+      - image: l.gcr.io/google/bazel:3.4.1
     steps:
       - checkout
       - configure_bazel
@@ -213,7 +213,7 @@ jobs:
       - save_bazel_release_cache
   update-repositoriesbzl:
     docker:
-      - image: l.gcr.io/google/bazel:3.3.1
+      - image: l.gcr.io/google/bazel:3.4.1
     steps:
       - checkout
       - configure_bazel
