@@ -164,8 +164,8 @@ jobs:
             go mod init tmp &&
             go get honnef.co/go/tools/cmd/staticcheck
       - run:
-          name: Install python3 for bazel
-          command: apt-get update && apt-get install -y python3
+          name: Install python3 and patch for bazel
+          command: apt-get update && apt-get install -y python3 patch
       - run:
           name: Run bazel build to create files for symlinking
           command: bazel build //...
