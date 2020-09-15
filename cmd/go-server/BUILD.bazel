@@ -10,13 +10,13 @@ go_library(
     importpath = "github.com/johanbrandhorst/bazel-mono/cmd/go-server",
     visibility = ["//visibility:private"],
     deps = [
-        "//cmd/go-server/users:go_default_library",
-        "//proto/myorg/users/v1:go_default_library",
-        "@com_github_fullstorydev_grpcui//standalone:go_default_library",
-        "@com_github_sirupsen_logrus//:go_default_library",
-        "@com_github_soheilhy_cmux//:go_default_library",
+        "//cmd/go-server/users",
+        "//proto/myorg/users/v1:users",
+        "@com_github_fullstorydev_grpcui//standalone",
+        "@com_github_sirupsen_logrus//:logrus",
+        "@com_github_soheilhy_cmux//:cmux",
         "@org_golang_google_grpc//:go_default_library",
-        "@org_golang_google_grpc//reflection:go_default_library",
+        "@org_golang_google_grpc//reflection",
     ],
 )
 
