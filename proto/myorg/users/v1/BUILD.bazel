@@ -22,7 +22,7 @@ go_proto_library(
 )
 
 go_library(
-    name = "go_default_library",
+    name = "users",
     srcs = ["doc.go"],
     embed = [":users_go_proto"],
     importpath = "github.com/johanbrandhorst/bazel-mono/proto/myorg/users/v1",
