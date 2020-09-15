@@ -3,110 +3,143 @@ package users_test
 import (
 	"context"
 	"database/sql"
+	"net"
 	"net/url"
-	"os"
-	"os/signal"
-	"syscall"
+	"runtime"
 	"testing"
 	"time"
 
-	"github.com/golang/mock/gomock"
-	"github.com/golang/protobuf/ptypes"
+	"github.com/google/go-cmp/cmp"
+	"github.com/ory/dockertest/v3"
+	"github.com/ory/dockertest/v3/docker"
 	"github.com/sirupsen/logrus"
-	"github.com/uw-labs/podrick"
-	_ "github.com/uw-labs/podrick/runtimes/docker" // register docker runtime
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	logrusadapter "logur.dev/adapter/logrus"
+	"google.golang.org/protobuf/testing/protocmp"
+	"google.golang.org/protobuf/types/known/durationpb"
 
 	"github.com/johanbrandhorst/bazel-mono/cmd/go-server/users"
-	pbUsers "github.com/johanbrandhorst/bazel-mono/proto/myorg/users/v1"
+	userspb "github.com/johanbrandhorst/bazel-mono/proto/myorg/users/v1"
 )
 
-var (
-	log *logrus.Logger
+func startDatabase(tb testing.TB, log *logrus.Logger) *url.URL {
+	tb.Helper()
 
-	pgURL *url.URL
-)
-
-func TestMain(m *testing.M) {
-	code := 0
-	defer func() {
-		os.Exit(code)
-	}()
-	ctx, cancel := signalCtx()
-	defer cancel()
-
-	log = logrus.New()
-	log.Formatter = &logrus.TextFormatter{
-		TimestampFormat: time.StampMilli,
-		FullTimestamp:   true,
-		ForceColors:     true,
+	pgURL := &url.URL{
+		Scheme: "postgres",
+		User:   url.UserPassword("myuser", "mypass"),
+		Path:   "mydatabase",
 	}
+	q := pgURL.Query()
+	q.Add("sslmode", "disable")
+	pgURL.RawQuery = q.Encode()
 
-	ctr, err := podrick.StartContainer(ctx, "postgres", "12-alpine", "5432",
-		podrick.WithEnv([]string{
-			"POSTGRES_HOST_AUTH_METHOD=trust", // https://github.com/docker-library/postgres/issues/681
-		}),
-		podrick.WithLivenessCheck(func(address string) error {
-			dbURL, err := url.Parse("postgresql://postgres@" + address + "/postgres?sslmode=disable")
-			if err != nil {
-				return err
-			}
-			db, err := sql.Open("pgx", dbURL.String())
-			if err != nil {
-				return err
-			}
-			defer db.Close()
-			return db.Ping()
-		}),
-		podrick.WithLogger(logrusadapter.New(log)),
-	)
+	pool, err := dockertest.NewPool("")
 	if err != nil {
-		log.Println("Failed to start database container", err)
-		return
+		tb.Fatalf("Could not connect to docker: %v", err)
 	}
-	defer func() {
-		err = ctr.Close(context.Background())
+
+	pw, _ := pgURL.User.Password()
+	env := []string{
+		"POSTGRES_USER=" + pgURL.User.Username(),
+		"POSTGRES_PASSWORD=" + pw,
+		"POSTGRES_DB=" + pgURL.Path,
+	}
+
+	resource, err := pool.Run("postgres", "13-alpine", env)
+	if err != nil {
+		tb.Fatalf("Could not start postgres container: %v", err)
+	}
+	tb.Cleanup(func() {
+		err = pool.Purge(resource)
 		if err != nil {
-			log.Println("Failed to stop database container", err)
-			return
+			tb.Fatalf("Could not purge container: %v", err)
 		}
-	}()
+	})
 
-	pgURL, err = url.Parse("postgresql://postgres@" + ctr.Address() + "/postgres?sslmode=disable")
-	if err != nil {
-		log.Println("Failed to parse container address", err)
-		return
+	pgURL.Host = resource.Container.NetworkSettings.IPAddress
+
+	// Docker layer network is different on Mac
+	if runtime.GOOS == "darwin" {
+		pgURL.Host = net.JoinHostPort(resource.GetBoundIP("5432/tcp"), resource.GetPort("5432/tcp"))
 	}
 
-	code = m.Run()
+	logWaiter, err := pool.Client.AttachToContainerNonBlocking(docker.AttachToContainerOptions{
+		Container:    resource.Container.ID,
+		OutputStream: log.Writer(),
+		ErrorStream:  log.Writer(),
+		Stderr:       true,
+		Stdout:       true,
+		Stream:       true,
+	})
+	if err != nil {
+		tb.Fatalf("Could not connect to postgres container log output: %v", err)
+	}
+
+	tb.Cleanup(func() {
+		err = logWaiter.Close()
+		if err != nil {
+			tb.Fatalf("Could not close container log: %v", err)
+		}
+		err = logWaiter.Wait()
+		if err != nil {
+			tb.Fatalf("Could not wait for container log to close: %v", err)
+		}
+	})
+
+	pool.MaxWait = 10 * time.Second
+	err = pool.Retry(func() (err error) {
+		db, err := sql.Open("pgx", pgURL.String())
+		if err != nil {
+			return err
+		}
+		defer func() {
+			cerr := db.Close()
+			if err == nil {
+				err = cerr
+			}
+		}()
+
+		return db.Ping()
+	})
+	if err != nil {
+		tb.Fatalf("Could not connect to postgres container: %v", err)
+	}
+
+	return pgURL
 }
 
 func TestAddDeleteUser(t *testing.T) {
-	d, err := users.NewDirectory(log, pgURL)
+	t.Parallel()
+
+	log := logrus.New()
+	d, err := users.NewDirectory(log, startDatabase(t, log))
 	if err != nil {
 		t.Fatalf("Failed to create a new directory: %s", err)
 	}
-	defer func() {
+	t.Cleanup(func() {
 		err = d.Close()
 		if err != nil {
 			t.Errorf("Failed to close directory: %s", err)
 		}
-	}()
+	})
 
 	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	t.Cleanup(cancel)
 
 	t.Run("When deleting an added user", func(t *testing.T) {
-		role := pbUsers.Role_ROLE_ADMIN
-		addResp, err := d.AddUser(ctx, &pbUsers.AddUserRequest{
+		t.Parallel()
+
+		role := userspb.Role_ROLE_ADMIN
+		resp, err := d.AddUser(ctx, &userspb.AddUserRequest{
 			Role: role,
 		})
 		if err != nil {
 			t.Fatalf("Failed to add a user: %s", err)
 		}
-		user1 := addResp.GetUser()
+
+		user1 := resp.GetUser()
 
 		if user1.GetRole() != role {
 			t.Errorf("Got role %q, wanted role %q", user1.GetRole(), role)
@@ -115,12 +148,7 @@ func TestAddDeleteUser(t *testing.T) {
 			t.Fatal("CreateTime was not set")
 		}
 
-		tm, err := ptypes.Timestamp(user1.GetCreateTime())
-		if err != nil {
-			t.Fatalf("CreateTime could not be parsed: %s", err)
-		}
-
-		s := time.Since(tm)
+		s := time.Since(user1.CreateTime.AsTime())
 		if s > time.Second {
 			t.Errorf("CreateTime was longer than 1 second ago: %s", s)
 		}
@@ -129,25 +157,22 @@ func TestAddDeleteUser(t *testing.T) {
 			t.Error("Id was not set")
 		}
 
-		delResp, err := d.DeleteUser(ctx, &pbUsers.DeleteUserRequest{
+		deleteResp, err := d.DeleteUser(ctx, &userspb.DeleteUserRequest{
 			Id: user1.GetId(),
 		})
 		if err != nil {
 			t.Fatalf("Failed to delete user: %s", err)
 		}
 
-		user2 := delResp.GetUser()
-
-		if user1.GetRole() != user2.GetRole() ||
-			user1.GetId() != user2.GetId() ||
-			user1.GetCreateTime().GetNanos() != user2.GetCreateTime().GetNanos() ||
-			user1.GetCreateTime().GetSeconds() != user2.GetCreateTime().GetSeconds() {
-			t.Fatalf("Deleted user differed from created user:\n%#v\n%#v", user1, user2)
+		if diff := cmp.Diff(user1, deleteResp.GetUser(), protocmp.Transform()); diff != "" {
+			t.Fatalf("Deleted user differed from created user:\n%s", diff)
 		}
 	})
 
 	t.Run("When using a non-uuid in DeleteUser", func(t *testing.T) {
-		_, err = d.DeleteUser(ctx, &pbUsers.DeleteUserRequest{
+		t.Parallel()
+
+		_, err = d.DeleteUser(ctx, &userspb.DeleteUserRequest{
 			Id: "not_a_UUID",
 		})
 		if status.Code(err) != codes.InvalidArgument {
@@ -157,153 +182,168 @@ func TestAddDeleteUser(t *testing.T) {
 }
 
 func TestListUsers(t *testing.T) {
-	d, err := users.NewDirectory(log, pgURL)
+	t.Parallel()
+
+	log := logrus.New()
+	d, err := users.NewDirectory(log, startDatabase(t, log))
 	if err != nil {
 		t.Fatalf("Failed to create a new directory: %s", err)
 	}
-	defer func() {
+	t.Cleanup(func() {
 		err = d.Close()
 		if err != nil {
 			t.Errorf("Failed to close directory: %s", err)
 		}
-	}()
+	})
 
 	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	t.Cleanup(cancel)
 
-	addResp, err := d.AddUser(ctx, &pbUsers.AddUserRequest{
-		Role: pbUsers.Role_ROLE_GUEST,
+	resp, err := d.AddUser(ctx, &userspb.AddUserRequest{
+		Role: userspb.Role_ROLE_GUEST,
 	})
 	if err != nil {
 		t.Fatalf("Failed to add a user: %s", err)
 	}
-
-	user1 := addResp.GetUser()
+	user1 := resp.GetUser()
 
 	// Sleep so we have slightly different create times
 	time.Sleep(500 * time.Millisecond)
 
-	addResp, err = d.AddUser(ctx, &pbUsers.AddUserRequest{
-		Role: pbUsers.Role_ROLE_MEMBER,
+	resp, err = d.AddUser(ctx, &userspb.AddUserRequest{
+		Role: userspb.Role_ROLE_MEMBER,
 	})
 	if err != nil {
 		t.Fatalf("Failed to add a user: %s", err)
 	}
-
-	user2 := addResp.GetUser()
+	user2 := resp.GetUser()
 
 	// Sleep so we have slightly different create times
 	time.Sleep(500 * time.Millisecond)
 
-	addResp, err = d.AddUser(ctx, &pbUsers.AddUserRequest{
-		Role: pbUsers.Role_ROLE_ADMIN,
+	resp, err = d.AddUser(ctx, &userspb.AddUserRequest{
+		Role: userspb.Role_ROLE_ADMIN,
 	})
 	if err != nil {
 		t.Fatalf("Failed to add a user: %s", err)
 	}
-
-	user3 := addResp.GetUser()
+	user3 := resp.GetUser()
 
 	t.Run("Returning all users", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		srv := NewMockUserService_ListUsersServer(ctrl)
-		srv.EXPECT().Context().Return(ctx)
-		srv.EXPECT().Send(&pbUsers.ListUsersResponse{
-			User: user1,
-		}).Return(nil)
-		srv.EXPECT().Send(&pbUsers.ListUsersResponse{
-			User: user2,
-		}).Return(nil)
-		srv.EXPECT().Send(&pbUsers.ListUsersResponse{
-			User: user3,
-		}).Return(nil)
+		t.Parallel()
 
-		err = d.ListUsers(&pbUsers.ListUsersRequest{}, srv)
+		srv := &listUsersSrvFake{
+			ctx: ctx,
+		}
+
+		err := d.ListUsers(new(userspb.ListUsersRequest), srv)
 		if err != nil {
 			t.Fatalf("Failed to list users: %s", err)
 		}
-		ctrl.Finish()
+
+		if len(srv.resps) != 3 {
+			t.Fatal("Did not receive 3 users as expected")
+		}
+		if diff := cmp.Diff(srv.resps[0].GetUser(), user1, protocmp.Transform()); diff != "" {
+			t.Errorf("First user didn't match user1: %s", diff)
+		}
+		if diff := cmp.Diff(srv.resps[1].GetUser(), user2, protocmp.Transform()); diff != "" {
+			t.Errorf("Second user didn't match user2: %s", diff)
+		}
+		if diff := cmp.Diff(srv.resps[2].GetUser(), user3, protocmp.Transform()); diff != "" {
+			t.Errorf("Third user didn't match user3: %s", diff)
+		}
 	})
 
 	t.Run("Filtering by age", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		srv := NewMockUserService_ListUsersServer(ctrl)
-		srv.EXPECT().Context().Return(ctx)
-		srv.EXPECT().Send(&pbUsers.ListUsersResponse{
-			User: user1,
-		}).Return(nil)
-		srv.EXPECT().Send(&pbUsers.ListUsersResponse{
-			User: user2,
-		}).Return(nil)
+		t.Parallel()
 
-		tm, err := ptypes.Timestamp(user2.GetCreateTime())
-		if err != nil {
-			t.Fatalf("Failed to parse timestamp: %s", err)
+		srv := &listUsersSrvFake{
+			ctx: ctx,
 		}
-		olderThan := time.Since(tm)
 
-		err = d.ListUsers(&pbUsers.ListUsersRequest{
-			OlderThan: ptypes.DurationProto(olderThan),
+		olderThan := time.Since(user2.GetCreateTime().AsTime())
+
+		err := d.ListUsers(&userspb.ListUsersRequest{
+			OlderThan: durationpb.New(olderThan),
 		}, srv)
 		if err != nil {
 			t.Fatalf("Failed to list users: %s", err)
 		}
-		ctrl.Finish()
+
+		if len(srv.resps) != 2 {
+			t.Fatal("Did not receive 2 users as expected")
+		}
+		if diff := cmp.Diff(srv.resps[0].GetUser(), user1, protocmp.Transform()); diff != "" {
+			t.Errorf("First user didn't match user1: %s", diff)
+		}
+		if diff := cmp.Diff(srv.resps[1].GetUser(), user2, protocmp.Transform()); diff != "" {
+			t.Errorf("Second user didn't match user2: %s", diff)
+		}
 	})
 
 	t.Run("Filtering by create time", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		srv := NewMockUserService_ListUsersServer(ctrl)
-		srv.EXPECT().Context().Return(ctx)
-		srv.EXPECT().Send(&pbUsers.ListUsersResponse{
-			User: user2,
-		}).Return(nil)
-		srv.EXPECT().Send(&pbUsers.ListUsersResponse{
-			User: user3,
-		}).Return(nil)
+		t.Parallel()
 
-		err = d.ListUsers(&pbUsers.ListUsersRequest{
+		srv := &listUsersSrvFake{
+			ctx: ctx,
+		}
+
+		err := d.ListUsers(&userspb.ListUsersRequest{
 			CreatedSince: user1.GetCreateTime(),
 		}, srv)
 		if err != nil {
 			t.Fatalf("Failed to list users: %s", err)
 		}
-		ctrl.Finish()
+
+		if len(srv.resps) != 2 {
+			t.Fatal("Did not receive 2 users as expected")
+		}
+		if diff := cmp.Diff(srv.resps[0].GetUser(), user2, protocmp.Transform()); diff != "" {
+			t.Errorf("First user didn't match user2: %s", diff)
+		}
+		if diff := cmp.Diff(srv.resps[1].GetUser(), user3, protocmp.Transform()); diff != "" {
+			t.Errorf("Second user didn't match user3: %s", diff)
+		}
 	})
 
 	t.Run("Filtering by age and create time", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		srv := NewMockUserService_ListUsersServer(ctrl)
-		srv.EXPECT().Context().Return(ctx)
-		srv.EXPECT().Send(&pbUsers.ListUsersResponse{
-			User: user2,
-		}).Return(nil)
+		t.Parallel()
 
-		tm, err := ptypes.Timestamp(user2.GetCreateTime())
-		if err != nil {
-			t.Fatalf("Failed to parse timestamp: %s", err)
+		srv := &listUsersSrvFake{
+			ctx: ctx,
 		}
-		olderThan := time.Since(tm)
 
-		err = d.ListUsers(&pbUsers.ListUsersRequest{
+		olderThan := time.Since(user2.GetCreateTime().AsTime())
+
+		err := d.ListUsers(&userspb.ListUsersRequest{
 			CreatedSince: user1.GetCreateTime(),
-			OlderThan:    ptypes.DurationProto(olderThan),
+			OlderThan:    durationpb.New(olderThan),
 		}, srv)
 		if err != nil {
 			t.Fatalf("Failed to list users: %s", err)
 		}
-		ctrl.Finish()
+		if len(srv.resps) != 1 {
+			t.Fatal("Did not receive 2 users as expected")
+		}
+		if diff := cmp.Diff(srv.resps[0].GetUser(), user2, protocmp.Transform()); diff != "" {
+			t.Errorf("First user didn't match user2: %s", diff)
+		}
 	})
 }
 
-func signalCtx() (context.Context, context.CancelFunc) {
-	ctx, cancel := context.WithCancel(context.Background())
-	go func() {
-		sCh := make(chan os.Signal, 1)
-		signal.Notify(sCh, os.Interrupt, syscall.SIGTERM)
-		<-sCh
-		cancel()
-	}()
+type listUsersSrvFake struct {
+	grpc.ServerStream
+	ctx   context.Context
+	resps []*userspb.ListUsersResponse
+}
 
-	return ctx, cancel
+func (l *listUsersSrvFake) Send(resp *userspb.ListUsersResponse) error {
+	l.resps = append(l.resps, resp)
+	return nil
+}
+
+// Context returns the context for this stream.
+func (l *listUsersSrvFake) Context() context.Context {
+	return l.ctx
 }

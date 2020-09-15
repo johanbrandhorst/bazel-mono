@@ -83,15 +83,6 @@ rules_proto_dependencies()
 
 rules_proto_toolchains()
 
-http_archive(
-    name = "bazel_gomock",
-    sha256 = "4baf3389ca48c30d8b072a027923c91c45915ab8061e39e7a0c62706332e096e",
-    strip_prefix = "bazel_gomock-1.2",
-    urls = [
-        "https://github.com/jmhodges/bazel_gomock/archive/v1.2.tar.gz",
-    ],
-)
-
 load("@com_github_bazelbuild_buildtools//buildifier:deps.bzl", "buildifier_dependencies")
 
 buildifier_dependencies()
