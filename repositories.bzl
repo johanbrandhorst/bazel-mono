@@ -881,8 +881,8 @@ def go_repositories():
     go_repository(
         name = "com_github_jackc_pgconn",
         importpath = "github.com/jackc/pgconn",
-        sum = "h1:S7T6cx5o2OqmxdHaXLH1ZeD1SbI8jBznyYE9Ec0RCQ8=",
-        version = "v1.6.4",
+        sum = "h1:pwjzcYyfmz/HQOQlENvG1OcDqauTGaqlVahq934F0/U=",
+        version = "v1.7.0",
     )
     go_repository(
         name = "com_github_jackc_pgio",
@@ -911,8 +911,8 @@ def go_repositories():
     go_repository(
         name = "com_github_jackc_pgproto3_v2",
         importpath = "github.com/jackc/pgproto3/v2",
-        sum = "h1:RHkX5ZUD9bl/kn0f9dYUWs1N7Nwvo1wwUYvKiR26Zco=",
-        version = "v2.0.4",
+        sum = "h1:NUbEWPmCQZbMmYlTjVoNPhc0CfnYyz2bfUAh6A5ZVJM=",
+        version = "v2.0.5",
     )
     go_repository(
         name = "com_github_jackc_pgservicefile",
@@ -923,8 +923,8 @@ def go_repositories():
     go_repository(
         name = "com_github_jackc_pgtype",
         importpath = "github.com/jackc/pgtype",
-        sum = "h1:t+6LWm5eWPLX1H5Se702JSBcirq6uWa4jiG4wV1rAWY=",
-        version = "v1.4.2",
+        sum = "h1:jzBqRk2HFG2CV4AIwgCI2PwTgm6UUoCAK2ofHHRirtc=",
+        version = "v1.5.0",
     )
     go_repository(
         name = "com_github_jackc_pgx",
@@ -935,14 +935,14 @@ def go_repositories():
     go_repository(
         name = "com_github_jackc_pgx_v4",
         importpath = "github.com/jackc/pgx/v4",
-        sum = "h1:SUbCLP2pXvf/Sr/25KsuI4aTxiFYIvpfk4l6aTSdyCw=",
-        version = "v4.8.1",
+        sum = "h1:6STjDqppM2ROy5p1wNDcsC7zJTjSHeuCsguZmXyzx7c=",
+        version = "v4.9.0",
     )
     go_repository(
         name = "com_github_jackc_puddle",
         importpath = "github.com/jackc/puddle",
-        sum = "h1:PJAw7H/9hoWC4Kf3J8iNmL1SwA6E8vfsLqBiL+F6CtI=",
-        version = "v1.1.1",
+        sum = "h1:mpQEXihFnWGDy6X98EOTh81JYuxn7txby8ilJ3iIPGM=",
+        version = "v1.1.2",
     )
 
     go_repository(
