@@ -202,6 +202,13 @@ def go_repositories():
         version = "v3.0.0",
     )
     go_repository(
+        name = "com_github_cenkalti_backoff_v4",
+        importpath = "github.com/cenkalti/backoff/v4",
+        sum = "h1:JIufpQLbh4DkbQoii76ItQIUFzevQSqOLZca4eamEDs=",
+        version = "v4.0.2",
+    )
+
+    go_repository(
         name = "com_github_census_instrumentation_opencensus_proto",
         importpath = "github.com/census-instrumentation/opencensus-proto",
         sum = "h1:glEXhBS5PSLLv4IXzLA5yPRVX4bilULVyxxbrfOtDAk=",
@@ -567,8 +574,8 @@ def go_repositories():
     go_repository(
         name = "com_github_golang_migrate_migrate_v4",
         importpath = "github.com/golang-migrate/migrate/v4",
-        sum = "h1:QI43Tlouiwpp2dK5Y767OouX0snJNRP/NubsVaArzDU=",
-        version = "v4.12.2",
+        sum = "h1:5S7HMjiq9u50X3+WXpzXPbUj1qUFuZRm8NCsX989Tn4=",
+        version = "v4.13.0",
     )
 
     go_repository(
@@ -1169,6 +1176,13 @@ def go_repositories():
         version = "v1.0.0",
     )
     go_repository(
+        name = "com_github_mutecomm_go_sqlcipher_v4",
+        importpath = "github.com/mutecomm/go-sqlcipher/v4",
+        sum = "h1:sV1tWCWGAVlPhNGT95Q+z/txFxuhAYWwHD1afF5bMZg=",
+        version = "v4.4.0",
+    )
+
+    go_repository(
         name = "com_github_mwitkow_go_conntrack",
         importpath = "github.com/mwitkow/go-conntrack",
         sum = "h1:F9x/1yl3T2AeKLr2AMdilSD8+f9bvMnNN8VS5iDtovc=",
@@ -1645,8 +1659,8 @@ def go_repositories():
     go_repository(
         name = "com_google_cloud_go",
         importpath = "cloud.google.com/go",
-        sum = "h1:A+DfAZQ/eWca7gvu42CS6FNSDX4R8cghF+XfWLn4R6g=",
-        version = "v0.63.0",
+        sum = "h1:xVP3LPvMjGT4J0a55y02Gw5y/dkY/rxGz58sfK1jqIo=",
+        version = "v0.64.0",
     )
     go_repository(
         name = "com_google_cloud_go_bigquery",
@@ -1669,8 +1683,8 @@ def go_repositories():
     go_repository(
         name = "com_google_cloud_go_spanner",
         importpath = "cloud.google.com/go/spanner",
-        sum = "h1:l4mz6H404S0pRz6Pp/reUAb7tEPKrukvzUcCI/6GPn8=",
-        version = "v1.8.0",
+        sum = "h1:WXuGWhUp5i7MeUMzMrJlodqJvSGtU0Cdw6BdHGgCgVo=",
+        version = "v1.9.0",
     )
     go_repository(
         name = "com_google_cloud_go_storage",
@@ -1951,8 +1965,8 @@ def go_repositories():
     go_repository(
         name = "org_golang_x_tools",
         importpath = "golang.org/x/tools",
-        sum = "h1:fsn47thVa7Ar/TMyXYlZgOoT7M4+kRpb+KpSAqRQx1w=",
-        version = "v0.0.0-20200806022845-90696ccdc692",
+        sum = "h1:a6ryybeZHQf5qnBc6IwRfVnI/75UmdtJo71f0//8Dqo=",
+        version = "v0.0.0-20200818005847-188abfa75333",
     )
     go_repository(
         name = "org_golang_x_xerrors",
