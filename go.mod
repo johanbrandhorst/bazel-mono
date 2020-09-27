@@ -6,7 +6,7 @@ require (
 	github.com/Masterminds/squirrel v1.4.0
 	github.com/fullstorydev/grpcui v1.0.0
 	github.com/fullstorydev/grpcurl v1.7.0 // indirect
-	github.com/golang-migrate/migrate/v4 v4.12.2
+	github.com/golang-migrate/migrate/v4 v4.13.0
 	github.com/golang/protobuf v1.4.2
 	github.com/google/go-cmp v0.5.2
 	github.com/jackc/pgconn v1.6.4
