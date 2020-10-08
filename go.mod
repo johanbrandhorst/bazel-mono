@@ -22,7 +22,7 @@ require (
 	golang.org/x/net v0.0.0-20200904194848-62affa334b73 // indirect
 	golang.org/x/sys v0.0.0-20200915084602-288bc346aa39 // indirect
 	google.golang.org/genproto v0.0.0-20200914193844-75d14daec038 // indirect
-	google.golang.org/grpc v1.32.0
+	google.golang.org/grpc v1.33.0
 	google.golang.org/grpc/examples v0.0.0-20200915000551-32e7099cccac // indirect
 	google.golang.org/protobuf v1.25.0
 )
