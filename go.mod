@@ -14,7 +14,7 @@ require (
 	github.com/jackc/pgx/v4 v4.9.0
 	github.com/jhump/protoreflect v1.7.0 // indirect
 	github.com/lib/pq v1.8.0 // indirect
-	github.com/ory/dockertest/v3 v3.6.0
+	github.com/ory/dockertest/v3 v3.6.1
 	github.com/sirupsen/logrus v1.7.0
 	github.com/soheilhy/cmux v0.1.4
 	github.com/stretchr/testify v1.6.1 // indirect

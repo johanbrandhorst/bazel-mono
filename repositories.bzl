@@ -328,8 +328,8 @@ def go_repositories():
     go_repository(
         name = "com_github_creack_pty",
         importpath = "github.com/creack/pty",
-        sum = "h1:6pwm8kMQKCmgUg0ZHTm5+/YvRK0s3THD/28+T6/kk4A=",
-        version = "v1.1.7",
+        sum = "h1:uDmaGzcdjhF4i/plgjmEsriH11Y0o7RKapEf/LDaM3w=",
+        version = "v1.1.9",
     )
     go_repository(
         name = "com_github_cznic_mathutil",
@@ -1170,6 +1170,13 @@ def go_repositories():
         version = "v1.1.2",
     )
     go_repository(
+        name = "com_github_moby_term",
+        importpath = "github.com/moby/term",
+        sum = "h1:SPoLlS9qUUnXcIY4pvA4CTwYjk0Is5f4UPEkeESr53k=",
+        version = "v0.0.0-20200915141129-7f0af18e79f2",
+    )
+
+    go_repository(
         name = "com_github_morikuni_aec",
         importpath = "github.com/morikuni/aec",
         sum = "h1:nP9CBfwrvYnBRgY6qfDQkygYDmYwOilePFkwzv4dU8A=",
@@ -1280,8 +1287,8 @@ def go_repositories():
     go_repository(
         name = "com_github_ory_dockertest_v3",
         importpath = "github.com/ory/dockertest/v3",
-        sum = "h1:I6KNJ6izxGduLACQii2SP/g7GN0JM9Xfaik6aAVaw6Y=",
-        version = "v3.6.0",
+        sum = "h1:gxheDizSurXBKRj1Lu5Ws/xzQx35VgzkLFr1woC6Hoc=",
+        version = "v3.6.1",
     )
     go_repository(
         name = "com_github_pelletier_go_toml",
