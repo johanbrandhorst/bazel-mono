@@ -4,8 +4,7 @@ go 1.14
 
 require (
 	github.com/Masterminds/squirrel v1.4.0
-	github.com/fullstorydev/grpcui v1.0.0
-	github.com/fullstorydev/grpcurl v1.7.0 // indirect
+	github.com/fullstorydev/grpcui v1.1.0
 	github.com/golang-migrate/migrate/v4 v4.13.0
 	github.com/golang/protobuf v1.4.2
 	github.com/google/go-cmp v0.5.2

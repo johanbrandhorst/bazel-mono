@@ -469,8 +469,8 @@ def go_repositories():
     go_repository(
         name = "com_github_fullstorydev_grpcui",
         importpath = "github.com/fullstorydev/grpcui",
-        sum = "h1:Y2Y53uL9GP11IVPkWRBZvcaDmPAwUn295c9Wh4gbdgk=",
-        version = "v1.0.0",
+        sum = "h1:fQy79r56kGzYLpdNP0NeSGG41LrSqJi9jJK7aItc5/A=",
+        version = "v1.1.0",
     )
     go_repository(
         name = "com_github_fullstorydev_grpcurl",
