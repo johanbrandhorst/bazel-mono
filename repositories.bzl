@@ -1287,8 +1287,8 @@ def go_repositories():
     go_repository(
         name = "com_github_ory_dockertest_v3",
         importpath = "github.com/ory/dockertest/v3",
-        sum = "h1:gxheDizSurXBKRj1Lu5Ws/xzQx35VgzkLFr1woC6Hoc=",
-        version = "v3.6.1",
+        sum = "h1:Q3Y8naCMyC1Nw91BHum1bGyEsNQc/UOIYS3ZoPoou0g=",
+        version = "v3.6.2",
     )
     go_repository(
         name = "com_github_pelletier_go_toml",
