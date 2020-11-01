@@ -302,8 +302,6 @@ github.com/jackc/pgconn v1.4.0/go.mod h1:Y2O3ZDF0q4mMacyWV3AstPJpeHXWGEetiFttmq5
 github.com/jackc/pgconn v1.5.0 h1:oFSOilzIZkyg787M1fEmyMfOUUvwj0daqYMfaWwNL4o=
 github.com/jackc/pgconn v1.5.0/go.mod h1:QeD3lBfpTFe8WUnPZWN5KY/mB8FGMIYRdd8P8Jr0fAI=
 github.com/jackc/pgconn v1.5.1-0.20200601181101-fa742c524853/go.mod h1:QeD3lBfpTFe8WUnPZWN5KY/mB8FGMIYRdd8P8Jr0fAI=
-github.com/jackc/pgconn v1.7.0 h1:pwjzcYyfmz/HQOQlENvG1OcDqauTGaqlVahq934F0/U=
-github.com/jackc/pgconn v1.7.0/go.mod h1:sF/lPpNEMEOp+IYhyQGdAvrG20gWf6A1tKlr0v7JMeA=
 github.com/jackc/pgconn v1.7.1 h1:Ii3hORkg9yTX+8etl2LtfFnL+YzmnR6VSLeTflQBkaQ=
 github.com/jackc/pgconn v1.7.1/go.mod h1:sF/lPpNEMEOp+IYhyQGdAvrG20gWf6A1tKlr0v7JMeA=
 github.com/jackc/pgio v1.0.0 h1:g12B9UwVnzGhueNavwioyEEpAmqMe1E/BN9ES+8ovkE=
@@ -333,8 +331,6 @@ github.com/jackc/pgtype v0.0.0-20190828014616-a8802b16cc59/go.mod h1:MWlu30kVJrU
 github.com/jackc/pgtype v1.2.0/go.mod h1:5m2OfMh1wTK7x+Fk952IDmI4nw3nPrvtQdM0ZT4WpC0=
 github.com/jackc/pgtype v1.3.1-0.20200510190516-8cd94a14c75a/go.mod h1:vaogEUkALtxZMCH411K+tKzNpwzCKU+AnPzBKZ+I+Po=
 github.com/jackc/pgtype v1.3.1-0.20200606141011-f6355165a91c/go.mod h1:cvk9Bgu/VzJ9/lxTO5R5sf80p0DiucVtN7ZxvaC4GmQ=
-github.com/jackc/pgtype v1.5.0 h1:jzBqRk2HFG2CV4AIwgCI2PwTgm6UUoCAK2ofHHRirtc=
-github.com/jackc/pgtype v1.5.0/go.mod h1:JCULISAZBFGrHaOXIIFiyfzW5VY0GRitRr8NeJsrdig=
 github.com/jackc/pgtype v1.6.1 h1:CAtFD7TS95KrxRAh3bidgLwva48WYxk8YkbHZsSWfbI=
 github.com/jackc/pgtype v1.6.1/go.mod h1:JCULISAZBFGrHaOXIIFiyfzW5VY0GRitRr8NeJsrdig=
 github.com/jackc/pgx/v4 v4.0.0-20190420224344-cc3461e65d96/go.mod h1:mdxmSJJuR08CZQyj1PVQBHy9XOp5p8/SHH6a0psbY9Y=
@@ -345,8 +341,8 @@ github.com/jackc/pgx/v4 v4.5.0/go.mod h1:EpAKPLdnTorwmPUUsqrPxy5fphV18j9q3wrfRXg
 github.com/jackc/pgx/v4 v4.6.1-0.20200510190926-94ba730bb1e9/go.mod h1:t3/cdRQl6fOLDxqtlyhe9UWgfIi9R8+8v8GKV5TRA/o=
 github.com/jackc/pgx/v4 v4.6.1-0.20200606145419-4e5062306904 h1:SdGWuGg+Cpxq6Z+ArXt0nafaKeTvtKGEoW+yvycspUU=
 github.com/jackc/pgx/v4 v4.6.1-0.20200606145419-4e5062306904/go.mod h1:ZDaNWkt9sW1JMiNn0kdYBaLelIhw7Pg4qd+Vk6tw7Hg=
-github.com/jackc/pgx/v4 v4.9.0 h1:6STjDqppM2ROy5p1wNDcsC7zJTjSHeuCsguZmXyzx7c=
-github.com/jackc/pgx/v4 v4.9.0/go.mod h1:MNGWmViCgqbZck9ujOOBN63gK9XVGILXWCvKLGKmnms=
+github.com/jackc/pgx/v4 v4.9.1 h1:HdkvbReFKJpb/3A1AfJxo8ha7D+9HqHPPk63ZcX9kAM=
+github.com/jackc/pgx/v4 v4.9.1/go.mod h1:vSrgqR4kWR955lMpDpCgMmVLLC3bfzd0M4T/FT7wVOw=
 github.com/jackc/puddle v0.0.0-20190413234325-e4ced69a3a2b/go.mod h1:m4B5Dj62Y0fbyuIc15OsIqK0+JU8nkqQjsgx7dvjSWk=
 github.com/jackc/puddle v0.0.0-20190608224051-11cab39313c9/go.mod h1:m4B5Dj62Y0fbyuIc15OsIqK0+JU8nkqQjsgx7dvjSWk=
 github.com/jackc/puddle v1.1.0/go.mod h1:m4B5Dj62Y0fbyuIc15OsIqK0+JU8nkqQjsgx7dvjSWk=
