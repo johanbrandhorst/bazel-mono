@@ -8,7 +8,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.13.0
 	github.com/golang/protobuf v1.4.3
 	github.com/google/go-cmp v0.5.2
-	github.com/jackc/pgconn v1.7.1
+	github.com/jackc/pgconn v1.7.2
 	github.com/jackc/pgtype v1.6.1
 	github.com/jackc/pgx/v4 v4.9.1
 	github.com/jhump/protoreflect v1.7.0 // indirect
