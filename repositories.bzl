@@ -935,8 +935,8 @@ def go_repositories():
     go_repository(
         name = "com_github_jackc_pgx_v4",
         importpath = "github.com/jackc/pgx/v4",
-        sum = "h1:HdkvbReFKJpb/3A1AfJxo8ha7D+9HqHPPk63ZcX9kAM=",
-        version = "v4.9.1",
+        sum = "h1:1V7EAc5jvIqXwdzgk8+YyOK+4071hhePzBCAF6gxUUw=",
+        version = "v4.9.2",
     )
     go_repository(
         name = "com_github_jackc_puddle",
