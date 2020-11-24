@@ -7,7 +7,7 @@ require (
 	github.com/fullstorydev/grpcui v1.1.0
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/golang/protobuf v1.4.3
-	github.com/google/go-cmp v0.5.3
+	github.com/google/go-cmp v0.5.4
 	github.com/jackc/pgconn v1.7.2
 	github.com/jackc/pgtype v1.6.1
 	github.com/jackc/pgx/v4 v4.9.2
