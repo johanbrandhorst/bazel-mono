@@ -1115,8 +1115,8 @@ def go_repositories():
     go_repository(
         name = "com_github_masterminds_squirrel",
         importpath = "github.com/Masterminds/squirrel",
-        sum = "h1:he5i/EXixZxrBUWcxzDYMiju9WZ3ld/l7QBNuo/eN3w=",
-        version = "v1.4.0",
+        sum = "h1:JukIZisrUXadA9pl3rMkjhiamxiB0cXiu+HGp/Y8cY8=",
+        version = "v1.5.0",
     )
     go_repository(
         name = "com_github_mattn_go_colorable",
