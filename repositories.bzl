@@ -881,8 +881,8 @@ def go_repositories():
     go_repository(
         name = "com_github_jackc_pgconn",
         importpath = "github.com/jackc/pgconn",
-        sum = "h1:195tt17jkjy+FrFlY0pgyrul5kRLb7BGXY3JTrNxeXU=",
-        version = "v1.7.2",
+        sum = "h1:FmjZ0rOyXTr1wfWs45i4a9vjnjWUAGpMuQLD9OSs+lw=",
+        version = "v1.8.0",
     )
     go_repository(
         name = "com_github_jackc_pgio",
