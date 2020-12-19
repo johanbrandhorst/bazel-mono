@@ -10,7 +10,7 @@ require (
 	github.com/google/go-cmp v0.5.4
 	github.com/jackc/pgconn v1.8.0
 	github.com/jackc/pgtype v1.6.2
-	github.com/jackc/pgx/v4 v4.10.0
+	github.com/jackc/pgx/v4 v4.10.1
 	github.com/jhump/protoreflect v1.7.0 // indirect
 	github.com/ory/dockertest/v3 v3.6.2
 	github.com/sirupsen/logrus v1.7.0
