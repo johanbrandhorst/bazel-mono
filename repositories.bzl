@@ -1092,6 +1092,12 @@ def go_repositories():
         sum = "h1:9xohqzkUwzR4Ga4ivdTcawVS89YSDVxXMa3xJX3cGzg=",
         version = "v1.8.0",
     )
+    go_repository(
+        name = "com_github_magefile_mage",
+        importpath = "github.com/magefile/mage",
+        sum = "h1:3HiXzCUY12kh9bIuyXShaVe529fJfyqoVM42o/uom2g=",
+        version = "v1.10.0",
+    )
 
     go_repository(
         name = "com_github_magiconair_properties",
@@ -1463,8 +1469,8 @@ def go_repositories():
     go_repository(
         name = "com_github_sirupsen_logrus",
         importpath = "github.com/sirupsen/logrus",
-        sum = "h1:ShrD1U9pZB12TX0cVy0DtePoCH97K8EtX+mg7ZARUtM=",
-        version = "v1.7.0",
+        sum = "h1:rsizeFmZP+GYwyb4V6t6qpG7ZNWzA2bvgW/yC2xHCcg=",
+        version = "v1.7.1",
     )
 
     go_repository(
