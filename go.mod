@@ -13,7 +13,7 @@ require (
 	github.com/jackc/pgx/v4 v4.10.1
 	github.com/jhump/protoreflect v1.7.0 // indirect
 	github.com/ory/dockertest/v3 v3.6.3
-	github.com/sirupsen/logrus v1.8.0
+	github.com/sirupsen/logrus v1.8.1
 	github.com/soheilhy/cmux v0.1.4
 	github.com/stretchr/testify v1.6.1 // indirect
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
