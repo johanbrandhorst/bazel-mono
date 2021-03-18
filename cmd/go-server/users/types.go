@@ -4,10 +4,9 @@ import (
 	"database/sql/driver"
 	"fmt"
 
-	"github.com/golang/protobuf/ptypes"
-	"github.com/golang/protobuf/ptypes/duration"
-	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/jackc/pgtype"
+	"google.golang.org/protobuf/types/known/durationpb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	pbUsers "github.com/johanbrandhorst/bazel-mono/proto/myorg/users/v1"
 )
@@ -45,14 +44,14 @@ func (rw *roleWrapper) Scan(in interface{}) error {
 	}
 }
 
-type timeWrapper timestamp.Timestamp
+type timeWrapper timestamppb.Timestamp
 
-// Value implements database/sql/driver.Valuer for timestamp.Timestamp
+// Value implements database/sql/driver.Valuer for timestamppb.Timestamp
 func (tw *timeWrapper) Value() (driver.Value, error) {
-	return ptypes.Timestamp((*timestamp.Timestamp)(tw))
+	return (*timestamppb.Timestamp)(tw).AsTime(), nil
 }
 
-// Scan implements database/sql/driver.Scanner for timestamp.Timestamp
+// Scan implements database/sql/driver.Scanner for timestamppb.Timestamp
 func (tw *timeWrapper) Scan(in interface{}) error {
 	var t pgtype.Timestamptz
 	err := t.Scan(in)
@@ -60,7 +59,7 @@ func (tw *timeWrapper) Scan(in interface{}) error {
 		return err
 	}
 
-	*tw = timeWrapper(timestamp.Timestamp{
+	*tw = timeWrapper(timestamppb.Timestamp{
 		Seconds: t.Time.Unix(),
 		Nanos:   int32(t.Time.Nanosecond()),
 	})
@@ -68,15 +67,11 @@ func (tw *timeWrapper) Scan(in interface{}) error {
 	return nil
 }
 
-type durationWrapper duration.Duration
+type durationWrapper durationpb.Duration
 
-// Value implements database/sql/driver.Valuer for duration.Duration
+// Value implements database/sql/driver.Valuer for durationpb.Duration
 func (dw *durationWrapper) Value() (driver.Value, error) {
-	d, err := ptypes.Duration((*duration.Duration)(dw))
-	if err != nil {
-		return nil, err
-	}
-
+	d := (*durationpb.Duration)(dw).AsDuration()
 	i := pgtype.Interval{
 		Microseconds: int64(d) / 1000,
 		Status:       pgtype.Present,
