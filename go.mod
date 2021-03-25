@@ -17,7 +17,7 @@ require (
 	github.com/soheilhy/cmux v0.1.4
 	github.com/stretchr/testify v1.6.1 // indirect
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
-	google.golang.org/grpc v1.36.0
+	google.golang.org/grpc v1.36.1
 	google.golang.org/grpc/examples v0.0.0-20200915000551-32e7099cccac // indirect
 	google.golang.org/protobuf v1.26.0
 )
