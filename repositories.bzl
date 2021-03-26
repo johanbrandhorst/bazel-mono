@@ -881,8 +881,8 @@ def go_repositories():
     go_repository(
         name = "com_github_jackc_pgconn",
         importpath = "github.com/jackc/pgconn",
-        sum = "h1:FmjZ0rOyXTr1wfWs45i4a9vjnjWUAGpMuQLD9OSs+lw=",
-        version = "v1.8.0",
+        sum = "h1:ySBX7Q87vOMqKU2bbmKbUvtYhauDFclYbNDYIE1/h6s=",
+        version = "v1.8.1",
     )
     go_repository(
         name = "com_github_jackc_pgio",
@@ -1926,8 +1926,8 @@ def go_repositories():
     go_repository(
         name = "org_golang_x_crypto",
         importpath = "golang.org/x/crypto",
-        sum = "h1:vclmkQCjlDX5OydZ9wv8rBCcS0QyQY66Mpf/7BZbInM=",
-        version = "v0.0.0-20200820211705-5c72a883971a",
+        sum = "h1:It14KIkyBFYkHkwZ7k45minvA9aorojkyjGk9KJ5B/w=",
+        version = "v0.0.0-20210322153248-0c34fe9e7dc2",
     )
     go_repository(
         name = "org_golang_x_exp",
@@ -1962,8 +1962,8 @@ def go_repositories():
     go_repository(
         name = "org_golang_x_net",
         importpath = "golang.org/x/net",
-        sum = "h1:dOiJ2n2cMwGLce/74I/QHMbnpk5GfY7InR8rczoMqRM=",
-        version = "v0.0.0-20201029221708-28c70e62bb1d",
+        sum = "h1:qWPm9rbaAMKs8Bq/9LRpbMqxWRVUAQwMI9fVrssnTfw=",
+        version = "v0.0.0-20210226172049-e18ecbb05110",
     )
     go_repository(
         name = "org_golang_x_oauth2",
@@ -1980,9 +1980,16 @@ def go_repositories():
     go_repository(
         name = "org_golang_x_sys",
         importpath = "golang.org/x/sys",
-        sum = "h1:HlFl4V6pEMziuLXyRkm5BIYq1y1GAbb02pRlWvI54OM=",
-        version = "v0.0.0-20201029080932-201ba4db2418",
+        sum = "h1:nxC68pudNYkKU6jWhgrqdreuFiOQWj1Fs7T3VrH4Pjw=",
+        version = "v0.0.0-20201119102817-f84b799fce68",
     )
+    go_repository(
+        name = "org_golang_x_term",
+        importpath = "golang.org/x/term",
+        sum = "h1:v+OssWQX+hTHEmOBgwxdZxK4zHq3yOs8F9J7mk0PY8E=",
+        version = "v0.0.0-20201126162022-7de9c90e9dd1",
+    )
+
     go_repository(
         name = "org_golang_x_text",
         importpath = "golang.org/x/text",
