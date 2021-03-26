@@ -14,9 +14,8 @@ require (
 	github.com/jhump/protoreflect v1.7.0 // indirect
 	github.com/ory/dockertest/v3 v3.6.3
 	github.com/sirupsen/logrus v1.8.1
-	github.com/soheilhy/cmux v0.1.4
+	github.com/soheilhy/cmux v0.1.5
 	github.com/stretchr/testify v1.6.1 // indirect
 	google.golang.org/grpc v1.36.1
-	google.golang.org/grpc/examples v0.0.0-20200915000551-32e7099cccac // indirect
 	google.golang.org/protobuf v1.26.0
 )
