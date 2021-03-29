@@ -6,7 +6,7 @@ require (
 	github.com/Masterminds/squirrel v1.5.0
 	github.com/fullstorydev/grpcui v1.1.0
 	github.com/golang-migrate/migrate/v4 v4.14.1
-	github.com/golang/protobuf v1.5.1
+	github.com/golang/protobuf v1.5.2
 	github.com/google/go-cmp v0.5.5
 	github.com/jackc/pgconn v1.8.1
 	github.com/jackc/pgtype v1.7.0
