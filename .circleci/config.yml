@@ -3,7 +3,7 @@ version: 2.1
 commands:
   generate_files_sum:
     steps:
-      - run: 
+      - run:
           name: Generate checksum file
           command: sha256sum $(git ls-files) > files.sum
   restore_bazel_test_cache:
@@ -20,13 +20,6 @@ commands:
           keys:
             - v1-bazel-build-cache-{{ checksum "files.sum" }}
             - v1-bazel-build-cache-
-  restore_bazel_release_cache:
-    steps:
-      - generate_files_sum
-      - restore_cache:
-          keys:
-            - v1-bazel-release-cache-{{ checksum "files.sum" }}
-            - v1-bazel-release-cache-
   save_bazel_test_cache:
     steps:
       - save_cache:
@@ -37,12 +30,6 @@ commands:
     steps:
       - save_cache:
           key: v1-bazel-build-cache-{{ checksum "files.sum" }}
-          paths:
-            - /tmp/build_output
-  save_bazel_release_cache:
-    steps:
-      - save_cache:
-          key: v1-bazel-release-cache-{{ checksum "files.sum" }}
           paths:
             - /tmp/build_output
   configure_bazel:
@@ -197,20 +184,6 @@ jobs:
       - run:
           name: Check for breaking changes
           command: buf check breaking --against-input '.git#branch=master'
-  release:
-    docker:
-      - image: l.gcr.io/google/bazel:3.5.0
-    steps:
-      - checkout
-      - configure_bazel
-      - restore_bazel_release_cache
-      - run: echo "${GITHUB_TOKEN}" | docker login https://docker.pkg.github.com -u johanbrandhorst --password-stdin
-      - run:
-          name: Publish all containers with bazel
-          command: |
-            bazel query --keep_going --noshow_progress "kind(container_push, //...)" | \
-            xargs -n 1 bazel run
-      - save_bazel_release_cache
   update-repositoriesbzl:
     docker:
       - image: l.gcr.io/google/bazel:3.5.0
@@ -238,7 +211,6 @@ workflows:
   version: 2
   build:
     jobs:
-      - release
       - build
       - test
       - gazelle
