@@ -1707,8 +1707,8 @@ def go_repositories():
     go_repository(
         name = "com_github_ory_dockertest_v3",
         importpath = "github.com/ory/dockertest/v3",
-        sum = "h1:L8JWiGgR+fnj90AEOkTFIEp4j5uWAK72P3IUsYgn2cs=",
-        version = "v3.6.3",
+        sum = "h1:AgsNQJ/VPvyBy9JL7AtLWa0/44ugxITnOpWw02znNgc=",
+        version = "v3.6.4",
     )
     go_repository(
         name = "com_github_pact_foundation_pact_go",
