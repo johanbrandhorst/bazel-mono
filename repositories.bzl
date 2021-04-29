@@ -269,8 +269,8 @@ def go_repositories():
     go_repository(
         name = "com_github_cenkalti_backoff_v4",
         importpath = "github.com/cenkalti/backoff/v4",
-        sum = "h1:JIufpQLbh4DkbQoii76ItQIUFzevQSqOLZca4eamEDs=",
-        version = "v4.0.2",
+        sum = "h1:c8LkOFQTzuO0WBM/ae5HdGQuZPfPxp7lqBRwQRm4fSc=",
+        version = "v4.1.0",
     )
 
     go_repository(
@@ -420,8 +420,8 @@ def go_repositories():
     go_repository(
         name = "com_github_creack_pty",
         importpath = "github.com/creack/pty",
-        sum = "h1:uDmaGzcdjhF4i/plgjmEsriH11Y0o7RKapEf/LDaM3w=",
-        version = "v1.1.9",
+        sum = "h1:07n33Z8lZxZ2qwegKbObQohDhXDQxiMMz1NOUGYlesw=",
+        version = "v1.1.11",
     )
     go_repository(
         name = "com_github_cznic_mathutil",
@@ -1504,8 +1504,8 @@ def go_repositories():
     go_repository(
         name = "com_github_moby_term",
         importpath = "github.com/moby/term",
-        sum = "h1:SPoLlS9qUUnXcIY4pvA4CTwYjk0Is5f4UPEkeESr53k=",
-        version = "v0.0.0-20200915141129-7f0af18e79f2",
+        sum = "h1:rzf0wL0CHVc8CEsgyygG0Mn9CNCCPZqOPaz8RiiHYQk=",
+        version = "v0.0.0-20201216013528-df9cb8a40635",
     )
     go_repository(
         name = "com_github_modern_go_concurrent",
@@ -1707,8 +1707,8 @@ def go_repositories():
     go_repository(
         name = "com_github_ory_dockertest_v3",
         importpath = "github.com/ory/dockertest/v3",
-        sum = "h1:AgsNQJ/VPvyBy9JL7AtLWa0/44ugxITnOpWw02znNgc=",
-        version = "v3.6.4",
+        sum = "h1:mhNKFeVEHuvaYW+/u+59mLzM/6XXGjpaet/yApgv+yc=",
+        version = "v3.6.5",
     )
     go_repository(
         name = "com_github_pact_foundation_pact_go",
