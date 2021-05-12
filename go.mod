@@ -16,6 +16,6 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/soheilhy/cmux v0.1.5
 	github.com/stretchr/testify v1.6.1 // indirect
-	google.golang.org/grpc v1.37.0
+	google.golang.org/grpc v1.37.1
 	google.golang.org/protobuf v1.26.0
 )
