@@ -167,7 +167,7 @@ jobs:
             - /home/circleci/.cache/staticcheck
   proto_lint:
     docker:
-      - image: bufbuild/buf:0.41.0
+      - image: bufbuild/buf:0.42.1
     steps:
       - checkout
       - run:
@@ -175,7 +175,7 @@ jobs:
           command: buf check lint
   proto_breaking:
     docker:
-      - image: bufbuild/buf:0.41.0
+      - image: bufbuild/buf:0.42.1
     steps:
       - checkout
       - run:
