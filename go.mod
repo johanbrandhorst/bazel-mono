@@ -17,5 +17,5 @@ require (
 	github.com/soheilhy/cmux v0.1.5
 	github.com/stretchr/testify v1.6.1 // indirect
 	google.golang.org/grpc v1.37.1
-	google.golang.org/protobuf v1.27.0
+	google.golang.org/protobuf v1.27.1
 )
