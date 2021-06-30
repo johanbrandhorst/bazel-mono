@@ -7,9 +7,9 @@ import (
 	migrate "github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
-	"github.com/golang/protobuf/ptypes/timestamp"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/johanbrandhorst/bazel-mono/cmd/go-server/users/migrations"
 	pbUsers "github.com/johanbrandhorst/bazel-mono/proto/myorg/users/v1"
@@ -42,7 +42,7 @@ func validateSchema(db *sql.DB) error {
 
 func scanUser(row squirrel.RowScanner) (*pbUsers.User, error) {
 	var user pbUsers.User
-	user.CreateTime = new(timestamp.Timestamp)
+	user.CreateTime = new(timestamppb.Timestamp)
 	err := row.Scan(
 		&user.Id,
 		(*roleWrapper)(&user.Role),

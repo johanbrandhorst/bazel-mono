@@ -5,7 +5,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 # gazelle:map_kind go_binary go_image @io_bazel_rules_docker//go:image.bzl
 
 go_library(
-    name = "go_default_library",
+    name = "go-server",
     srcs = ["main.go"],
     importpath = "github.com/johanbrandhorst/bazel-mono/cmd/go-server",
     visibility = ["//visibility:private"],
@@ -21,8 +21,8 @@ go_library(
 )
 
 go_image(
-    name = "go-server",
-    embed = [":go_default_library"],
+    name = "go-server-image",
+    embed = [":go-server"],
     pure = "on",
     static = "on",
     visibility = ["//visibility:public"],
@@ -31,7 +31,7 @@ go_image(
 container_push(
     name = "publish",
     format = "Docker",
-    image = "go-server",
+    image = "go-server-image",
     registry = "docker.pkg.github.com",
     repository = "johanbrandhorst/bazel-mono/go-server",
     tag = "{STABLE_GIT_SHA}",
