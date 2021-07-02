@@ -76,13 +76,21 @@ jobs:
       - save_bazel_test_cache
   gazelle:
     docker:
-      - image: l.gcr.io/google/bazel:3.5.0
+      - image: golang:1.16
     steps:
       - checkout
+      - run:
+          environment:
+            BAZELISK_VERSION: "1.4.0"
+          name: Install Bazelisk as bazel
+          command: |
+            wget -O /usr/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64 &&
+            chmod +x /usr/bin/bazel
       - configure_bazel
       - restore_bazel_build_cache
       - run: bazel run :gazelle
-      - run: bazel run :gazelle -- update-repos -from_file=go.mod -to_macro=repositories.bzl%go_repositories
+      - run: bazel run :gazelle -- update-repos -from_file=go.mod -to_macro=repositories.bzl%go_repositories -prune
+      - run: go mod tidy
       - run: git diff --exit-code
   buildifier:
     docker:
