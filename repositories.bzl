@@ -39,6 +39,12 @@ def go_repositories():
         sum = "h1:UQZhZ2O0vMHr2cI+DC1Mbh0TJxzA3RcLoMsFw+aXw7E=",
         version = "v0.0.0-20190924025748-f65c72e2690d",
     )
+    go_repository(
+        name = "com_github_antihax_optional",
+        importpath = "github.com/antihax/optional",
+        sum = "h1:xK2lYat7ZLaVVcIuj82J8kIro4V6kDe0AUDFboUCwcg=",
+        version = "v1.0.0",
+    )
 
     go_repository(
         name = "com_github_apache_arrow_go_arrow",
@@ -336,6 +342,12 @@ def go_repositories():
         sum = "h1:cqQfy1jclcSy/FwLjemeg3SR1yaINm74aQyupQ0Bl8M=",
         version = "v0.0.0-20201120205902-5459f2c99403",
     )
+    go_repository(
+        name = "com_github_cncf_xds_go",
+        importpath = "github.com/cncf/xds/go",
+        sum = "h1:OZmjad4L3H8ncOIR8rnb5MREYqG8ixi5+WbeUsquF0c=",
+        version = "v0.0.0-20210312221358-fbca930ec8ed",
+    )
 
     go_repository(
         name = "com_github_cockroachdb_apd",
@@ -533,8 +545,8 @@ def go_repositories():
     go_repository(
         name = "com_github_envoyproxy_go_control_plane",
         importpath = "github.com/envoyproxy/go-control-plane",
-        sum = "h1:QyzYnTnPE15SQyUeqU6qLbWxMkwyAyu+vGksa0b7j00=",
-        version = "v0.9.9-0.20210217033140-668b12f5399d",
+        sum = "h1:dulLQAYQFYtG5MTplgNGHWuV2D+OBD+Z8lmDBmbLg+s=",
+        version = "v0.9.9-0.20210512163311-63b5d3c536b0",
     )
     go_repository(
         name = "com_github_envoyproxy_protoc_gen_validate",
@@ -923,8 +935,8 @@ def go_repositories():
     go_repository(
         name = "com_github_grpc_ecosystem_grpc_gateway",
         importpath = "github.com/grpc-ecosystem/grpc-gateway",
-        sum = "h1:UImYN5qQ8tuGpGE16ZmjvcTtTw24zw1QAp/SlnNrZhI=",
-        version = "v1.9.5",
+        sum = "h1:gmcG1KaJ57LophUzW0Hy8NmPhnMZb4M0+kPpLofRdBo=",
+        version = "v1.16.0",
     )
     go_repository(
         name = "com_github_hailocab_go_hostpool",
@@ -1814,8 +1826,8 @@ def go_repositories():
     go_repository(
         name = "com_github_rogpeppe_fastuuid",
         importpath = "github.com/rogpeppe/fastuuid",
-        sum = "h1:INyGLmTCMGFr6OVIb977ghJvABML2CMVjPoRfNDdYDo=",
-        version = "v1.1.0",
+        sum = "h1:Ppwyp6VYCF1nvBTXL3trRso7mXMlRrw9ooo375wvi2s=",
+        version = "v1.2.0",
     )
     go_repository(
         name = "com_github_rogpeppe_go_internal",
@@ -2370,6 +2382,12 @@ def go_repositories():
         sum = "h1:4r2CANuYhKGmYWP02+5E94rLRcS/YeD+KlxSrOsMxk0=",
         version = "v0.1.1",
     )
+    go_repository(
+        name = "io_opentelemetry_go_proto_otlp",
+        importpath = "go.opentelemetry.io/proto/otlp",
+        sum = "h1:rwOQPCuKAKmwGKq2aVNnYIibI6wnV7EvzgfTCzcdGg8=",
+        version = "v0.7.0",
+    )
 
     go_repository(
         name = "io_rsc_binaryregexp",
@@ -2417,8 +2435,8 @@ def go_repositories():
     go_repository(
         name = "org_golang_google_grpc",
         importpath = "google.golang.org/grpc",
-        sum = "h1:ARnQJNWxGyYJpdf/JXscNlQr/uv607ZPU9Z7ogHi+iI=",
-        version = "v1.37.1",
+        sum = "h1:Klz8I9kdtkIN6EpHHUOMLCYhTn/2WAe5a0s1hcBkdTI=",
+        version = "v1.39.0",
     )
 
     go_repository(
