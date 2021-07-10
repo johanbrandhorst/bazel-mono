@@ -8,7 +8,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/google/go-cmp v0.5.6
 	github.com/jackc/pgconn v1.9.0
-	github.com/jackc/pgtype v1.7.0
+	github.com/jackc/pgtype v1.8.0
 	github.com/jackc/pgx/v4 v4.11.0
 	github.com/jhump/protoreflect v1.7.0 // indirect
 	github.com/ory/dockertest/v3 v3.7.0

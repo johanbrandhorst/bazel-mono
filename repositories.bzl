@@ -664,8 +664,8 @@ def go_repositories():
     go_repository(
         name = "com_github_gofrs_uuid",
         importpath = "github.com/gofrs/uuid",
-        sum = "h1:y12jRkkFxsd7GpqdSZ+/KCs/fJbqpEXSGd4+jfEaewE=",
-        version = "v3.2.0+incompatible",
+        sum = "h1:1SD/1F5pU8p29ybwgQSwpQk+mwdRrXCYuPhW6m+TnJw=",
+        version = "v4.0.0+incompatible",
     )
     go_repository(
         name = "com_github_gogo_googleapis",
@@ -1161,8 +1161,8 @@ def go_repositories():
     go_repository(
         name = "com_github_jackc_pgtype",
         importpath = "github.com/jackc/pgtype",
-        sum = "h1:6f4kVsW01QftE38ufBYxKciO6gyioXSC0ABIRLcZrGs=",
-        version = "v1.7.0",
+        sum = "h1:iFVCcVhYlw0PulYCVoguRGm0SE9guIcPcccnLzHj8bA=",
+        version = "v1.8.0",
     )
 
     go_repository(
@@ -1338,8 +1338,8 @@ def go_repositories():
     go_repository(
         name = "com_github_lib_pq",
         importpath = "github.com/lib/pq",
-        sum = "h1:9xohqzkUwzR4Ga4ivdTcawVS89YSDVxXMa3xJX3cGzg=",
-        version = "v1.8.0",
+        sum = "h1:AqzbZs4ZoCBp+GtejcpCpcxM3zlSMx29dXbUSeVtJb8=",
+        version = "v1.10.2",
     )
     go_repository(
         name = "com_github_lightstep_lightstep_tracer_common_golang_gogo",
@@ -1895,8 +1895,8 @@ def go_repositories():
     go_repository(
         name = "com_github_shopspring_decimal",
         importpath = "github.com/shopspring/decimal",
-        sum = "h1:jUIKcSPO9MoMJBbEoyE/RJoE8vz7Mb8AjvifMMwSyvY=",
-        version = "v0.0.0-20200227202807-02e2044944cc",
+        sum = "h1:abSATXmQEYyShuxI4/vyW3tV1MrKAJzCZ/0zLUXYbsQ=",
+        version = "v1.2.0",
     )
 
     go_repository(
