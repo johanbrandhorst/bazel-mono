@@ -14,6 +14,6 @@ require (
 	github.com/ory/dockertest/v3 v3.7.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/soheilhy/cmux v0.1.5
-	google.golang.org/grpc v1.37.1
+	google.golang.org/grpc v1.40.0
 	google.golang.org/protobuf v1.27.1
 )
