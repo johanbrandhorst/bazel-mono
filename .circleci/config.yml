@@ -76,7 +76,7 @@ jobs:
       - save_bazel_test_cache
   gazelle:
     docker:
-      - image: golang:1.16
+      - image: golang:1.17
     steps:
       - checkout
       - run:
@@ -103,7 +103,7 @@ jobs:
       - run: git diff --exit-code
   format:
     docker:
-      - image: golang:1.16
+      - image: golang:1.17
     steps:
       - checkout
       - run:
@@ -120,7 +120,7 @@ jobs:
           command: git diff --exit-code
   mod:
     docker:
-      - image: golang:1.16
+      - image: golang:1.17
     steps:
       - checkout
       - restore_cache:
@@ -136,7 +136,7 @@ jobs:
             - /home/circleci/.cache/go-build
   lint:
     docker:
-      - image: golang:1.16
+      - image: golang:1.17
     steps:
       - checkout
       - run:
@@ -194,7 +194,7 @@ jobs:
           command: buf check breaking --against-input '.git#branch=master'
   update-repositoriesbzl:
     docker:
-      - image: golang:1.16
+      - image: golang:1.17
     steps:
       - checkout
       - run:
