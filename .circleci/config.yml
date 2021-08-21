@@ -118,22 +118,6 @@ jobs:
       - run:
           name: Check for any changes
           command: git diff --exit-code
-  mod:
-    docker:
-      - image: golang:1.17
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - go-mod-cache
-      - run: go mod tidy
-      - run:
-          name: Check for any changes
-          command: git diff --exit-code
-      - save_cache:
-          key: go-mod-cache
-          paths:
-            - /home/circleci/.cache/go-build
   lint:
     docker:
       - image: golang:1.17
@@ -168,6 +152,7 @@ jobs:
           name: Run symlinks script to create symlinks
           command: ./symlinks.sh
       - run: staticcheck ./...
+      - run: go mod tidy
       - save_cache:
           key: v1-staticcheck-cache-{{ checksum "go.sum" }}
           paths:
@@ -219,7 +204,7 @@ jobs:
               git config user.name "Renovate Bot"
               git config user.email "bot@renovateapp.com"
               git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/johanbrandhorst/bazel-mono.git
-              git commit --amend --no-edit
+              git commit --amend --no-edit --allow-empty
               git push --force-with-lease origin ${CIRCLE_BRANCH}
             fi
 
