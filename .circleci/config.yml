@@ -217,7 +217,6 @@ workflows:
       - gazelle
       - buildifier
       - format
-      - mod
       - lint
       - proto_lint
       - proto_breaking:
